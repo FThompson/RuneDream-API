@@ -3,6 +3,9 @@ package org.runedream.api.methods;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
+
 import org.runedream.Configuration;
 import org.runedream.RuneDream;
 import org.runedream.api.util.Log;
@@ -59,7 +62,7 @@ public class Environment {
 			if (file != null) {
 				Log.log("Saved screenshot to " + file.getPath());
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			Log.log("Failed to save screenshot.");
 		}
 	}
@@ -78,6 +81,36 @@ public class Environment {
 	 */
 	public static int getUserID() {
 		return RuneDream.getUserID();
+	}
+	
+	/**
+	 * Checks if the user has a rank of sponsor+ or not.
+	 * @return <tt>true</tt> if sponsor+; otherwise <tt>false</tt>.
+	 */
+	public static boolean hasSponsorPermissions() {
+		return RuneDream.hasSponsorPermissions();
+	}
+	
+	/**
+	 * Checks if RuneDream is running in lite mode or not.
+	 * @return <tt>true</tt> if lite mode; otherwise <tt>false</tt>.
+	 */
+	public static boolean isLiteMode() {
+		return RuneDream.isLiteMode();
+	}
+	
+	/**
+	 * Adds an internal frame to the desktop display. Intended for use with plugins only.
+	 * @param frame The JInternalFrame to add.
+	 */
+	public static void addInternalFrame(final JInternalFrame frame) {
+		if (!isLiteMode()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					RuneDream.getDesktop().add(frame);
+				}
+			});
+		}
 	}
 
 }
