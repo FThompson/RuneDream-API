@@ -1,9 +1,12 @@
 package org.runedream.api.methods;
 
-import org.runedream.api.Script;
+import org.runedream.api.util.Random;
+import org.runedream.api.util.Time;
 
 /**
  * Convenience class for dynamic sleeping.
+ * 
+ * @author Vulcan
  */
 public final class Timing {
 	
@@ -13,15 +16,19 @@ public final class Timing {
 	 * @param condition The condition to be met.
 	 * @return <tt>true</tt> if the condition was met; otherwise <tt>false</tt>.
 	 */
-	public static boolean waitFor(final long timeout, final Condition condition) {
-		long startTime = System.currentTimeMillis();
+	public static boolean waitFor(final int timeout, final Condition condition) {
+		final long startTime = System.currentTimeMillis();
 		while (startTime + timeout > System.currentTimeMillis()) {
 			if (condition.isMet()) {
 				return true;
 			}
-			Script.sleep(20, 30);
+			Time.sleep(20, 30);
 		}
 		return condition.isMet();
+	}
+	
+	public static boolean waitFor(final int min, final int max, final Condition condition) {
+		return waitFor(Random.random(min, max), condition);
 	}
 	
 	/**

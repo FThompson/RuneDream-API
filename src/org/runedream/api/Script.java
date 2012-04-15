@@ -1,15 +1,25 @@
 package org.runedream.api;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.util.EventListener;
+import java.util.logging.Logger;
 
-import org.runedream.api.util.Random;
+import org.runedream.api.util.Log;
+import org.runedream.internal.script.ScriptManager;
 
 /**
  * Abstract class to be extended by scripts.
  */
-public abstract class Script {
+public abstract class Script implements EventListener {
 
-	private final ScriptManifest manifest = super.getClass().getAnnotation(ScriptManifest.class);
+	private final ScriptManifest manifest;
+	private final Logger log;
+	
+	public Script() {
+		manifest = super.getClass().getAnnotation(ScriptManifest.class);
+		log = Logger.getLogger(super.getClass().getName());
+	}
 	
 	/**
 	 * Method for optional inheritance which is called after the initialization of a script.
@@ -52,23 +62,27 @@ public abstract class Script {
 	}
 	
 	/**
-	 * Sleeps for a given amount of milliseconds.
-	 * @param millis The milliseconds to sleep.
+	 * Logs a message.
+	 * @param message The object message to log.
 	 */
-	public static final void sleep(final int millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (final InterruptedException e) {
-		}
+	public final void log(final Object message) {
+		Log.log(log, message);
 	}
 	
 	/**
-	 * Sleeps for a random amount of milliseconds between two given values.
-	 * @param min The minimum boundary to sleep.
-	 * @param max The exclusive maximum boundary to sleep.
+	 * Logs a message in a given color.
+	 * @param message The object message to log.
+	 * @param color The color to log the message in.
 	 */
-	public static final void sleep(final int min, final int max) {
-		sleep(Random.random(min, max));
+	public final void log(final Object message, final Color color) {
+		Log.log(log, message, color);
+	}
+	
+	/**
+	 * Stops the script, calling onFinish().
+	 */
+	public static final void stop() {
+		ScriptManager.stopScript();
 	}
 	
 	@Override

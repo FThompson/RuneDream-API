@@ -1,20 +1,28 @@
 package org.runedream.api;
 
+import java.awt.Color;
+import java.util.EventListener;
+import java.util.logging.Logger;
+
 import javax.swing.JInternalFrame;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
+import org.runedream.api.util.Log;
 import org.runedream.internal.plugin.PluginManager;
 
 /**
  * Abstract class to be extended by plugins.
  */
-public abstract class Plugin extends JInternalFrame implements Runnable {
+public abstract class Plugin extends JInternalFrame implements EventListener, Runnable {
 
 	private static final long serialVersionUID = 1L;
-	private final PluginManifest manifest = super.getClass().getAnnotation(PluginManifest.class);
+	private final PluginManifest manifest;
+	private final Logger log;
 	
 	public Plugin() {
+		manifest = super.getClass().getAnnotation(PluginManifest.class);
+		log = Logger.getLogger(super.getClass().getName());
 		setTitle(manifest.name() + " v" + manifest.version());
 		if (manifest.description() != null) {
 			setToolTipText(manifest.description());
@@ -61,6 +69,23 @@ public abstract class Plugin extends JInternalFrame implements Runnable {
 	 */
 	public final PluginManifest getManifest() {
 		return manifest;
+	}
+	
+	/**
+	 * Logs a message.
+	 * @param message The object message to log.
+	 */
+	public final void log(final Object message) {
+		Log.log(log, message);
+	}
+	
+	/**
+	 * Logs a message in a given color.
+	 * @param message The object message to log.
+	 * @param color The color to log the message in.
+	 */
+	public final void log(final Object message, final Color color) {
+		Log.log(log, message, color);
 	}
 	
 	@Override

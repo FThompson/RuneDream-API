@@ -3,12 +3,14 @@ package org.runedream.api.methods;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import org.runedream.api.Script;
 import org.runedream.api.util.Random;
+import org.runedream.api.util.Time;
 import org.runedream.input.MouseHandler;
 
 /**
  * Mouse input methods.
+ * 
+ * @author Vulcan
  */
 public class Mouse {
 	
@@ -147,8 +149,8 @@ public class Mouse {
 		if (!getLocation().equals(new Point(x, y))) {
 			move(x, y, randX, randY);
 		}
-		MouseHandler.getEventHandler().pressMouse(left ? 1 : 2);
-		MouseHandler.getEventHandler().releaseMouse(left ? 1 : 2);
+		press(left);
+		release(left);
 	}
 
 	/**
@@ -255,7 +257,7 @@ public class Mouse {
 	 * @param left <tt>true</tt> for left button; <tt>false</tt> for right button.
 	 */
 	public static void press(final boolean left) {
-		MouseHandler.getEventHandler().pressMouse(left ? 1 : 2);
+		MouseHandler.getEventHandler().pressMouse(left ? 1 : 3);
 	}
 
 	/**
@@ -270,7 +272,7 @@ public class Mouse {
 	 * @param left <tt>true</tt> for left button; <tt>false</tt> for right button.
 	 */
 	public static void release(final boolean left) {
-		MouseHandler.getEventHandler().releaseMouse(left ? 1 : 2);
+		MouseHandler.getEventHandler().releaseMouse(left ? 1 : 3);
 	}
 
 	/**
@@ -287,9 +289,9 @@ public class Mouse {
 	 */
 	public static void drag(final int x, final int y) {
 		press();
-		Script.sleep(150, 350);
+		Time.sleep(150, 350);
 		move(x, y);
-		Script.sleep(150, 350);
+		Time.sleep(150, 350);
 		release();
 	}
 
@@ -326,6 +328,28 @@ public class Mouse {
 	}
 	
 	/**
+	 * Clicks the mouse wheel button.
+	 */
+	public static void clickWheel() {
+		pressWheel();
+		releaseWheel();
+	}
+	
+	/**
+	 * Presses the mouse wheel button.
+	 */
+	public static void pressWheel() {
+		MouseHandler.getEventHandler().pressMouse(2);
+	}
+	
+	/**
+	 * Releases the mouse wheel button.
+	 */
+	public static void releaseWheel() {
+		MouseHandler.getEventHandler().releaseMouse(2);
+	}
+	
+	/**
 	 * Gets the movement speed of the mouse.
 	 * @return The speed.
 	 */
@@ -351,10 +375,18 @@ public class Mouse {
 
 	/**
 	 * Gets the location of the last mouse press.
-	 * @return The location of the last mouse press, or a new Point(-1, -1) if none exists.
+	 * @return The location of the last mouse press, or a Point(-1, -1) if none exists.
 	 */
 	public static Point getPressLocation() {
 		return MouseHandler.getEventHandler().getPressLocation();
+	}
+	
+	/**
+	 * Gets the current target point of movement.
+	 * @return The target point, or null if none exists.
+	 */
+	public static Point getTargetLocation() {
+		return MouseHandler.getTarget();
 	}
 
 	/**

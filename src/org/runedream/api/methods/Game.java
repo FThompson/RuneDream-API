@@ -1,6 +1,5 @@
 package org.runedream.api.methods;
 
-import java.applet.Applet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GameCanvas;
@@ -11,15 +10,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.runedream.RuneDream;
-
 /**
  * Basic game image methods.
  */
 public class Game {
 
 	public static final Color ENERGY_ENABLED = new Color(252, 219, 1);
-	public static final Color TAB_OPEN = new Color(254, 239, 114);
 	public static final Rectangle ENERGY = new Rectangle(705, 93, 34, 33);
 	public static final Rectangle ENERGY_TEXT_BOUNDS = new Rectangle(740, 102, 22, 23);
 	public static final Rectangle COMPASS = new Rectangle(521, 3, 44, 42);
@@ -41,7 +37,7 @@ public class Game {
 	 * @return The color at the given coordinates.
 	 */
 	public static Color getColorAt(final int x, final int y) {
-		return ImageUtil.getColorAt(GameCanvas.getImage(), x, y);
+		return ImageUtil.getColorAt(Game.getImage(), x, y);
 	}
 	
 	/**
@@ -58,7 +54,7 @@ public class Game {
 	 * @return A two-dimensional array of the colors of the game image.
 	 */
 	public static Color[][] getColors() {
-		return ImageUtil.getColors(GameCanvas.getImage());
+		return ImageUtil.getColors(Game.getImage());
 	}
 	
 	/**
@@ -85,13 +81,8 @@ public class Game {
 	 * @return The game's dimension.
 	 */
 	public static Dimension getCanvasSize() {
-		final Applet gameClient = RuneDream.getUI().getGameClient();
-		if (gameClient != null) {
-			return gameClient.getComponentAt(1, 1).getSize();
-		} else {
-			final BufferedImage image = getImage();
-			return new Dimension(image.getWidth(), image.getHeight());
-		}
+		final BufferedImage image = getImage();
+		return new Dimension(image.getWidth(), image.getHeight());
 	}
 	
 	/**
@@ -178,28 +169,9 @@ public class Game {
 	}
 	
 	/**
-	 * Opens a given tab.
-	 * @param tab The tab to open.
-	 */
-	public static void openTab(final Tab tab) {
-		tab.open();
-	}
-	
-	/**
-	 * Gets the open tab.
-	 * @return The open tab.
-	 */
-	public static Tab getOpenTab() {
-		for (final Tab tab : Tab.values()) {
-			if (tab.isOpen()) {
-				return tab;
-			}
-		}
-		return null;
-	}
-	
-	/**
 	 * Experience button.
+	 * 
+	 * @author Static
 	 */
 	public static class Experience {
 		
@@ -273,6 +245,8 @@ public class Game {
 	
 	/**
 	 * Money pouch button.
+	 * 
+	 * @author Static
 	 */
 	public static class MoneyPouch {
 		
@@ -345,97 +319,4 @@ public class Game {
 		}
 	}
 	
-	/**
-	 * Game tab enumeration.
-	 */
-	public enum Tab {
-		COMBAT(0, new Rectangle(522, 170, 30, 33)),
-		TASKS(1, new Rectangle(552, 170, 30, 33)),
-		SKILLS(2, new Rectangle(582, 170, 30, 33)),
-		QUESTS(3, new Rectangle(612, 170, 30, 33)),
-		INVENTORY(4, new Rectangle(642, 170, 30, 33)),
-		EQUIPMENT(5, new Rectangle(672, 170, 30, 33)), 
-		PRAYER(6, new Rectangle(702, 170, 30, 33)),
-		MAGIC(7, new Rectangle(732, 170, 30, 33)),
-		FRIEND_LIST(8, new Rectangle(552, 468, 30, 33)),
-		FRIENDS_CHAT(9, new Rectangle(582, 468, 30, 33)),
-		CLAN_CHAT(10, new Rectangle(612, 468, 30, 33)),
-		OPTIONS(11, new Rectangle(642, 467, 30, 33)),
-		EMOTES(12, new Rectangle(672, 468, 30, 33)),
-		MUSIC(13, new Rectangle(702, 467, 30, 33)),
-		NOTES(14, new Rectangle(732, 467, 30, 33));
-		
-		private final int index;
-		private final Rectangle bounds;
-		
-		private Tab(final int index, final Rectangle bounds) {
-			this.index = index;
-			this.bounds = bounds;
-		}
-		
-		/**
-		 * Gets the tab index.
-		 * @return The tab's index.
-		 */
-		public int getIndex() {
-			return index;
-		}
-		
-		/**
-		 * Gets the tab bounds.
-		 * @return The tab's bounds.
-		 */
-		public Rectangle getBounds() {
-			return bounds;
-		}
-		
-		/**
-		 * Gets the tab's center point.
-		 * @return The tab's center.
-		 */
-		public Point getCenter() {
-			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
-		}
-		
-		/**
-		 * Gets the tab's color array.
-		 * @return The colors of the tab.
-		 */
-		public Color[] getColors() {
-			final List<Color> colors = new LinkedList<Color>();
-			for (int x = bounds.x; x < bounds.x + bounds.width; x++) {
-				for (int y = bounds.y; y < bounds.y + bounds.height; y++) {
-					final Point p = new Point(x, y);
-					if (Game.isPointValid(p)) {
-						colors.add(Game.getColorAt(p));
-					}
-				}
-			}
-			return colors.toArray(new Color[colors.size()]);
-		}
-		
-		/**
-		 * Checks if the tab is open.
-		 * @return <tt>true</tt> if open; otherwise <tt>false</tt>.
-		 */
-		public boolean isOpen() {
-			for (final Color color : getColors()) {
-				if (color.equals(TAB_OPEN)) {
-					return true;
-				}
-			}
-			return false;
-		}
-		
-		/**
-		 * Opens the tab.
-		 */
-		public void open() {
-			if (!isOpen()) {
-				Mouse.click(getCenter(), 6, 6);
-			}
-		}
-		
-	}
-
 }

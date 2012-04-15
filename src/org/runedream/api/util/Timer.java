@@ -2,6 +2,8 @@ package org.runedream.api.util;
 
 /**
  * A timer utility.
+ * 
+ * @author Vulcan
  */
 public class Timer {
 

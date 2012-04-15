@@ -7,6 +7,11 @@ import java.util.logging.Logger;
 
 import org.runedream.RuneDream;
 
+/**
+ * Methods for logging.
+ * 
+ * @author Vulcan
+ */
 public class Log {
 	
 	public static final Logger DEFAULT = Logger.getLogger(RuneDream.class.getName());

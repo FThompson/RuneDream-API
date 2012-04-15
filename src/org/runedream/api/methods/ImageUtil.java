@@ -8,7 +8,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-import java.util.List;
+
+import org.runedream.api.util.Random;
 
 /**
  * Image-related utility methods.
@@ -26,7 +27,7 @@ public class ImageUtil {
 		final int[] rgbs = new int[w * h];
 		return image.getRGB(0, 0, w, h, rgbs, 0, w);
 	}
-	
+
 	/**
 	 * Gets the color at a given x-y coordinate on the given image.
 	 * @param image The image.
@@ -40,7 +41,7 @@ public class ImageUtil {
 		}
 		return Color.BLACK;
 	}
-	
+
 	/**
 	 * Gets the color at a given point on the given image.
 	 * @param image The image.
@@ -50,7 +51,7 @@ public class ImageUtil {
 	public static Color getColorAt(final BufferedImage image, final Point p) {
 		return getColorAt(image, p.x, p.y);
 	}
-	
+
 	/**
 	 * Gets the array of all colors of the given image.
 	 * @param image The image.
@@ -69,6 +70,55 @@ public class ImageUtil {
 	}
 
 	/**
+	 * Gets a random point within a given threshold of a given color in given bounds of a given image.
+	 * @param image The image to scan.
+	 * @param bounds The bounds to scan within.
+	 * @param color The color to scan for.
+	 * @param threshold The threshold to scan by.
+	 * @return A random point meeting the given conditions.
+	 */
+	public static Point getRandomPoint(final BufferedImage image, final Rectangle bounds,
+			final Color color, final double threshold){
+		LinkedList<Point> points = getPointsWithColor(image, bounds, color, threshold);
+		return points.size() > 0 ? points.get(Random.random(0, points.size())) : null;
+	}
+
+	/**
+	 * Gets a random point within a given threshold of a given color in a given image.
+	 * @param image The image to scan.
+	 * @param color The color to scan for.
+	 * @param threshold The threshold to scan by.
+	 * @return A random point meeting the given conditions.
+	 */
+	public static Point getRandomPoint(final BufferedImage image, final Color color, final double threshold){
+		LinkedList<Point> points = getPointsWithColor(image, color, threshold);
+		return points.size() > 0 ? points.get(Random.random(0, points.size())) : null;
+	}
+
+	/**
+	 * Gets a random point of a given color in given bounds of a given image.
+	 * @param image The image to scan.
+	 * @param bounds The bounds to scan within.
+	 * @param color The color to scan for.
+	 * @return A random point meeting the given conditions.
+	 */
+	public static Point getRandomPoint(final BufferedImage image, final Rectangle bounds, final Color color){
+		LinkedList<Point> points = getPointsWithColor(image, bounds, color);
+		return points.size() > 0 ? points.get(Random.random(0, points.size())) : null;
+	}
+
+	/**
+	 * Gets a random point of a given color in a given image.
+	 * @param image The image to scan.
+	 * @param color The color to scan for.
+	 * @return A random point meeting the given conditions.
+	 */
+	public static Point getRandomPoint(final BufferedImage image, final Color color){
+		LinkedList<Point> points = getPointsWithColor(image, color);
+		return points.size() > 0 ? points.get(Random.random(0, points.size())) : null;
+	}
+
+	/**
 	 * Gets all points within an image which have a color within threshold distance of a given color.
 	 * @param image The image to scan.
 	 * @param bounds The bounds to scan within.
@@ -76,12 +126,12 @@ public class ImageUtil {
 	 * @param threshold The threshold to scan by.
 	 * @return A list of points where the color of the image is within the threshold.
 	 */
-	public static List<Point> getPointsWithColor(final BufferedImage image, final Rectangle bounds,
+	public static LinkedList<Point> getPointsWithColor(final BufferedImage image, final Rectangle bounds,
 			final Color color, final double threshold) {
-		final List<Point> points = new LinkedList<Point>();
+		final LinkedList<Point> points = new LinkedList<Point>();
 		final Color[][] colors = getColors(image);
-		for (int x = bounds.x; x < bounds.width; x++) {
-			for (int y = bounds.y; y < bounds.height; y++) {
+		for (int x = bounds.x; x < bounds.width + bounds.x; x++) {
+			for (int y = bounds.y; y < bounds.height + bounds.y; y++) {
 				if (ColorUtil.getDistance(colors[x][y], color) <= threshold) {
 					points.add(new Point(x, y));
 				}
@@ -97,11 +147,11 @@ public class ImageUtil {
 	 * @param color The color to scan for.
 	 * @return A list of points where the color of the image is equal.
 	 */
-	public static List<Point> getPointsWithColor(final BufferedImage image,
+	public static LinkedList<Point> getPointsWithColor(final BufferedImage image,
 			final Rectangle bounds, final Color color) {
 		return getPointsWithColor(image, bounds, color, 0.0);
 	}
-	
+
 	/**
 	 * Gets all points within an image which have a color within threshold distance of a given color.
 	 * @param image The image to scan.
@@ -109,7 +159,7 @@ public class ImageUtil {
 	 * @param threshold The threshold to scan by.
 	 * @return A list of points where the color of the image is within the threshold.
 	 */
-	public static List<Point> getPointsWithColor(final BufferedImage image,
+	public static LinkedList<Point> getPointsWithColor(final BufferedImage image,
 			final Color color, final double threshold) {
 		return getPointsWithColor(image, new Rectangle(image.getWidth(), image.getHeight()), color, threshold);
 	}
@@ -120,8 +170,79 @@ public class ImageUtil {
 	 * @param color The color to scan for.
 	 * @return A list of points where the color of the image is equal.
 	 */
-	public static List<Point> getPointsWithColor(final BufferedImage image, final Color color) {
+	public static LinkedList<Point> getPointsWithColor(final BufferedImage image, final Color color) {
 		return getPointsWithColor(image, color, 0.0);
+	}
+
+	/**
+	 * Gets all points within an image which have a color within threshold distance of given colors.
+	 * @param image The image to scan.
+	 * @param bounds The bounds to scan within.
+	 * @param colors The colors to scan for.
+	 * @param threshold The threshold to scan by.
+	 * @return A list of points where a color of the image is within the threshold.
+	 */
+	public static LinkedList<Point> getPointsWithColors(final BufferedImage image,
+			final Rectangle bounds, final Color[] colors, final double threshold) {
+		final LinkedList<Point> points = new LinkedList<Point>();
+		for (int x = bounds.x; x < bounds.width + bounds.x; x++) {
+			for (int y = bounds.y; y < bounds.height + bounds.y; y++) {
+				final Color pointColor = new Color(image.getRGB(x, y));
+				for (final Color color : colors) {
+					final double foundRed = pointColor.getRed(), foundGreen = pointColor
+							.getGreen(), foundBlue = pointColor.getBlue();
+					final double minRed = (color.getRed() - (color.getRed() * threshold)), maxRed = (color
+							.getRed() + (color.getRed() * threshold)), minGreen = (color
+							.getGreen() - (color.getGreen() * threshold)), maxGreen = (color
+							.getGreen() + (color.getGreen() * threshold)), minBlue = (color
+							.getBlue() - (color.getBlue() * threshold)), maxBlue = (color
+							.getBlue() + (color.getBlue() * threshold));
+					if (isWithinRange(foundRed, minRed, maxRed)
+							&& isWithinRange(foundGreen, minGreen, maxGreen)
+							&& isWithinRange(foundBlue, minBlue, maxBlue))
+						points.add(new Point(x, y));
+				}
+			}
+		}
+		return points;
+	}
+
+	/**
+	 * Gets all points within an image which have a color within threshold distance of given colors.
+	 * @param image The image to scan.
+	 * @param colors The colors to scan for.
+	 * @param threshold The threshold to scan by.
+	 * @return A list of points where a color of the image is within the threshold.
+	 */
+	public static LinkedList<Point> getPointsWithColors(final BufferedImage image,
+			final Color[] colors, final double threshold) {
+		return getPointsWithColors(image, new Rectangle(image.getWidth(), image.getHeight()), colors, threshold);
+	}
+
+	/**
+	 * Gets all points within an image which have a color equal to one of given colors.
+	 * @param image The image to scan.
+	 * @param bounds The bounds to scan within.
+	 * @param colors The colors to scan for.
+	 * @return A list of points where a color of the image is equal to one of given colors.
+	 */
+	public static LinkedList<Point> getPointsWithColors(final BufferedImage image,
+			final Rectangle bounds, final Color[] colors) {
+		return getPointsWithColors(image, bounds, colors, 0.0);
+	}
+
+	/**
+	 * Gets all points within an image which have a color equal to one of given colors.
+	 * @param image The image to scan.
+	 * @param colors The colors to scan for.
+	 * @return A list of points where a color of the image is equal to one of given colors.
+	 */
+	public static LinkedList<Point> getPointsWithColors(final BufferedImage image, final Color[] colors) {
+		return getPointsWithColors(image, colors, 0.0);
+	}
+
+	private static boolean isWithinRange(final double d, final double a, final double x) {
+		return (d >= a && d <= x);
 	}
 
 	/**
@@ -259,7 +380,7 @@ public class ImageUtil {
 	 * @param threshold The image distance threshold, ranging between 0.0 and 1.0.
 	 * @return A list of points where matches were found.
 	 */
-	public static List<Point> findMatchLocations(final BufferedImage large,
+	public static LinkedList<Point> findMatchLocations(final BufferedImage large,
 			final BufferedImage small, final double threshold) {
 		return findMatchLocations(large, small, threshold, false);
 	}
@@ -270,13 +391,13 @@ public class ImageUtil {
 	 * @param small The small image to search for in the large image.
 	 * @return A list of points where matches were found.
 	 */
-	public static List<Point> findMatchLocations(final BufferedImage large, final BufferedImage small) {
+	public static LinkedList<Point> findMatchLocations(final BufferedImage large, final BufferedImage small) {
 		return findMatchLocations(large, small, 0.0);
 	}
-	
-	private static List<Point> findMatchLocations(final BufferedImage large,
+
+	private static LinkedList<Point> findMatchLocations(final BufferedImage large,
 			final BufferedImage small, final double threshold, final boolean breakAfterFirst) {
-		final List<Point> locs = new LinkedList<Point>();
+		final LinkedList<Point> locs = new LinkedList<Point>();
 		for (int y = 0; y < large.getHeight() - small.getHeight(); y++) {
 			for (int x = 0; x < large.getWidth() - small.getWidth(); x++) {
 				if (imageDistance(large, x, y, small) <= threshold) {
@@ -324,7 +445,7 @@ public class ImageUtil {
 	public static boolean imageContains(final BufferedImage large, final BufferedImage small) {
 		return imageContains(large, small, 0.0);
 	}
-	
+
 	/**
 	 * Gets whether the sub image of a larger image contains a smaller image by a given threshold or not.
 	 * @param large The large, parent image.
@@ -340,7 +461,7 @@ public class ImageUtil {
 			final int width, final int height, final BufferedImage small, final double threshold) {
 		return imageContains(large.getSubimage(x, y, width, height), small, threshold);
 	}
-	
+
 	/**
 	 * Gets whether the sub image of a larger image contains an exact match of a smaller image or not.
 	 * @param large The large, parent image.

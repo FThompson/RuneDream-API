@@ -13,6 +13,8 @@ import org.runedream.util.ScreenshotUtil;
 
 /**
  * Bot environment utility methods.
+ * 
+ * @author Vulcan
  */
 public class Environment {
 	
@@ -65,6 +67,14 @@ public class Environment {
 		} catch (final IOException e) {
 			Log.log("Failed to save screenshot.");
 		}
+	}
+	
+	/**
+	 * Gets the bot server's current language.
+	 * @return The language; 0 for English, 1 for German, 2 for French, 3 for Portuguese.
+	 */
+	public static int getLanguage() {
+		return RuneDream.getUI().getLanguage().getId();
 	}
 	
 	/**

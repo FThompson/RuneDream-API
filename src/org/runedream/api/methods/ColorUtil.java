@@ -9,7 +9,7 @@ public class ColorUtil {
 
 	/**
 	 * Gets the "distance" between two colors, their components assumed
-	 * to be points in 3D space ranging from 0.0 to 1.0.
+	 * to be points in 3D space ranging from 0.0 to root 3.
 	 * @param r1 Red value of the first color.
 	 * @param g1 Green value of the first color.
 	 * @param b1 Blue value of the first color.
@@ -27,7 +27,7 @@ public class ColorUtil {
 
 	/**
 	 * Gets the "distance" between two colors, their components assumed
-	 * to be points in 3D space ranging from 0.0 to 1.0.
+	 * to be points in 3D space ranging from 0.0 to root 3.
 	 * @param c1 The first color.
 	 * @param c2 The second Color.
 	 * @return The "distance" between the two colors.
@@ -42,7 +42,7 @@ public class ColorUtil {
 
 	/**
 	 * Gets the "distance" between two colors, their components assumed
-	 * to be points in 3D space ranging from 0.0 to 1.0.
+	 * to be points in 3D space ranging from 0.0 to root 3.
 	 * @param rgb1 The RGB values of the first color.
 	 * @param rgb2 The RGB values of the second color.
 	 * @return The "distance" between the two colors.
@@ -53,7 +53,7 @@ public class ColorUtil {
 
 	/**
 	 * Gets the "distance" between two colors, their components assumed
-	 * to be points in 3D space ranging from 0.0 to 1.0.
+	 * to be points in 3D space ranging from 0.0 to root 3.
 	 * @param rgb1 The RGB value of the first color.
 	 * @param rgb2 The RGB value of the second color.
 	 * @return The "distance" between the two colors.
@@ -83,5 +83,15 @@ public class ColorUtil {
 		c.getColorComponents(rgb);
 		return isDark(rgb[0], rgb[1], rgb[2]);
 	}
+
+	/**
+	 * Gets the complementary color to a given color.
+	 * @param baseColor The color to complement.
+	 * @return The complementary color.
+	 */
+	public static Color getComplementary(final Color baseColor) {
+		return new Color(255 - baseColor.getRed(), 255 - baseColor.getGreen(), 255 - baseColor.getBlue());
+	}
+
 
 }

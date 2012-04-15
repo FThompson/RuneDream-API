@@ -7,14 +7,21 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.runedream.api.wrappers.Tab;
+
+/**
+ * Options tab convenience methods.
+ * 
+ * @author Amplex
+ */
 public class Options {
 
 	public static boolean isOpen() {
-		return Game.getOpenTab().equals(Game.Tab.OPTIONS);
+		return Tabs.getOpenTab().equals(Tab.OPTIONS);
 	}
 	
 	public static void open() {
-		Game.openTab(Game.Tab.OPTIONS);
+		Tabs.openTab(Tab.OPTIONS);
 	}
 	
 	public enum ChatMode {

@@ -9,7 +9,13 @@ import java.util.List;
 
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Mouse;
+import org.runedream.api.wrappers.Tab;
 
+/**
+ * Prayer interface convenience methods.
+ * 
+ * @author Amplex
+ */
 public class Prayer {
 	
 	public static final Color ACTIVATED = new Color(171, 154, 108);
@@ -18,11 +24,11 @@ public class Prayer {
 	public static final Rectangle QUICKPRAYER_TEXT_BOUNDS = new Rectangle(740, 62, 22, 23);
 	
 	public static boolean isOpen() {
-		return Game.Tab.PRAYER.isOpen();
+		return Tabs.getOpenTab().equals(Tab.PRAYER);
 	}
 	
 	public static void open() {
-		Game.Tab.PRAYER.open();
+		Tabs.openTab(Tab.PRAYER);
 	}
 	
 	public static Point getButtonCenter() {
@@ -140,9 +146,33 @@ public class Prayer {
 			return isActivated();
 		}
 	}
-		
+	
+	/**
+	 * Ancient prayer enum.
+	 * 
+	 * @author Viper
+	 */
 	public enum Ancient implements Effect {
-		; // TODO
+		PROTECT_ITEM("Protect Item", 50, new Rectangle(555, 212, 30, 32)),
+		SAP_WARRIOR("Sap Warrior", 50, new Rectangle(592, 212, 30, 32)), 
+		SAP_RANGER("Sap Ranger", 52, new Rectangle(629, 212, 30, 32)),
+		SAP_MAGE("Sap Mage", 54, new Rectangle(666, 212, 30, 32)), 
+		SAP_SPIRIT("Sap Spirit", 56, new Rectangle(703, 212, 30, 32)), 
+		BERSERKER("Berserker", 59, new Rectangle(555, 248, 30, 32)), 
+		DEFLECT_SUMMONING("Deflect Summoning", 62, new Rectangle(592, 248, 30, 32)), 
+		DEFLECT_MAGIC("Deflect Magic", 65, new Rectangle(629, 248, 30, 32)), 
+		DEFLECT_MISSILES("Deflect Missiles", 68, new Rectangle(666, 248, 30, 32)), 
+		DEFLECT_MELEE("Deflect Melee", 71, new Rectangle(703, 248, 30, 32)), 
+		LEECH_ATTACK("Lecch Attack", 74, new Rectangle(555, 284, 30, 32)), 
+		LEECH_RANGED("Leech Ranged", 76, new Rectangle(592, 284, 30, 32)), 
+		LEECH_MAGIC("Leech Magic", 78, new Rectangle(629, 284, 30, 32)), 
+		LEECH_DEFENCE("Leech Defence", 80, new Rectangle(666, 284, 30, 32)), 
+		LEECH_STRENGTH("Leech Strength", 82, new Rectangle(703, 284, 30, 32)), 
+		LEECH_ENERGY("Leech Energy", 84, new Rectangle(555, 321, 30, 32)), 
+		LEECH_SPECIAL_ATTACK("Leech Special Attack", 86, new Rectangle(592, 321, 30, 32)), 
+		WRATH("Wrath", 89, new Rectangle(629, 321, 30, 32)), 
+		SOUL_SPLIT("Soul Split", 92, new Rectangle(666, 321, 30, 32)), 
+		TURMOIL("Turmoil", 95, new Rectangle(703, 321, 30, 32));
 		
 		private final String name;
 		private final int required_level;

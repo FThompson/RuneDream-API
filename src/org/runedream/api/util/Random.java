@@ -2,6 +2,8 @@ package org.runedream.api.util;
 
 /**
  * Random number generation methods.
+ * 
+ * @author Vulcan
  */
 public class Random {
 	

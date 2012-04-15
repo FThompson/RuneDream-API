@@ -1,4 +1,4 @@
-package org.runedream.api.wrappers;
+package org.runedream.api.util;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;

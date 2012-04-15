@@ -8,60 +8,53 @@ import java.util.List;
 
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Mouse;
+import org.runedream.api.methods.Timing.Condition;
+import org.runedream.api.wrappers.Tab;
 
+/**
+ * Inventory interface convenience methods.
+ * 
+ * @author Static
+ */
 public class Inventory {
 	
 	public static final Rectangle BOUNDS = new Rectangle(545, 206, 192, 260);
+	public static final Color SLOT_BACKGROUND = new Color(63, 53, 44);
 	
 	public enum Slot {
-		SLOT_0(0, new Rectangle(561, 212, 36, 32)),
-		SLOT_1(1, new Rectangle(603, 212, 36, 32)),
-		SLOT_2(2, new Rectangle(645, 212, 36, 32)),
-		SLOT_3(3, new Rectangle(687, 212, 36, 32)),
-		SLOT_4(4, new Rectangle(561, 248, 36, 32)),
-		SLOT_5(5, new Rectangle(603, 248, 36, 32)),
-		SLOT_6(6, new Rectangle(645, 248, 36, 32)),
-		SLOT_7(7, new Rectangle(687, 248, 36, 32)),
-		SLOT_8(8, new Rectangle(561, 283, 36, 32)),
-		SLOT_9(9, new Rectangle(603, 283, 36, 32)),
-		SLOT_10(10, new Rectangle(645, 283, 36, 32)),
-		SLOT_11(11, new Rectangle(687, 283, 36, 32)),
-		SLOT_12(12, new Rectangle(561, 319, 36, 32)),
-		SLOT_13(13, new Rectangle(603, 319, 36, 32)),
-		SLOT_14(14, new Rectangle(645, 319, 36, 32)),
-		SLOT_15(15, new Rectangle(687, 319, 36, 32)),
-		SLOT_16(16, new Rectangle(561, 355, 36, 32)),
-		SLOT_17(17, new Rectangle(603, 355, 36, 32)),
-		SLOT_18(18, new Rectangle(645, 355, 36, 32)),
-		SLOT_19(19, new Rectangle(687, 355, 36, 32)),
-		SLOT_20(20, new Rectangle(561, 391, 36, 32)),
-		SLOT_21(21, new Rectangle(603, 391, 36, 32)),
-		SLOT_22(22, new Rectangle(645, 391, 36, 32)),
-		SLOT_23(23, new Rectangle(687, 391, 36, 32)),
-		SLOT_24(24, new Rectangle(561, 427, 36, 32)),
-		SLOT_25(25, new Rectangle(603, 427, 36, 32)),
-		SLOT_26(26, new Rectangle(645, 427, 36, 32)),
-		SLOT_27(27, new Rectangle(687, 427, 36, 32));
+		SLOT_0(new Rectangle(561, 212, 36, 32)),
+		SLOT_1(new Rectangle(603, 212, 36, 32)),
+		SLOT_2(new Rectangle(645, 212, 36, 32)),
+		SLOT_3(new Rectangle(687, 212, 36, 32)),
+		SLOT_4(new Rectangle(561, 248, 36, 32)),
+		SLOT_5(new Rectangle(603, 248, 36, 32)),
+		SLOT_6(new Rectangle(645, 248, 36, 32)),
+		SLOT_7(new Rectangle(687, 248, 36, 32)),
+		SLOT_8(new Rectangle(561, 283, 36, 32)),
+		SLOT_9(new Rectangle(603, 283, 36, 32)),
+		SLOT_10(new Rectangle(645, 283, 36, 32)),
+		SLOT_11(new Rectangle(687, 283, 36, 32)),
+		SLOT_12(new Rectangle(561, 319, 36, 32)),
+		SLOT_13(new Rectangle(603, 319, 36, 32)),
+		SLOT_14(new Rectangle(645, 319, 36, 32)),
+		SLOT_15(new Rectangle(687, 319, 36, 32)),
+		SLOT_16(new Rectangle(561, 355, 36, 32)),
+		SLOT_17(new Rectangle(603, 355, 36, 32)),
+		SLOT_18(new Rectangle(645, 355, 36, 32)),
+		SLOT_19(new Rectangle(687, 355, 36, 32)),
+		SLOT_20(new Rectangle(561, 391, 36, 32)),
+		SLOT_21(new Rectangle(603, 391, 36, 32)),
+		SLOT_22(new Rectangle(645, 391, 36, 32)),
+		SLOT_23(new Rectangle(687, 391, 36, 32)),
+		SLOT_24(new Rectangle(561, 427, 36, 32)),
+		SLOT_25(new Rectangle(603, 427, 36, 32)),
+		SLOT_26(new Rectangle(645, 427, 36, 32)),
+		SLOT_27(new Rectangle(687, 427, 36, 32));
 		
-		private final int index;
 		private final Rectangle bounds;
 		
-		private Slot(final int index, final Rectangle bounds) {
-			this.index = index;
+		private Slot(final Rectangle bounds) {
 			this.bounds = bounds;
-		}
-		
-		public static Slot getSlot(final int index) {
-			for (final Slot slot : Slot.values()) {
-				if (slot.getIndex() == index) {
-					return slot;
-				}
-			}
-			return null;
-		}
-		
-		public int getIndex() {
-			return index;
 		}
 		
 		public Rectangle getBounds() {
@@ -91,26 +84,34 @@ public class Inventory {
 			return colors.toArray(new Color[colors.size()]);
 		}
 		
-		// TODO: Use item corners and center for checking (dice)
-		// because center point can be empty for certain items
 		public boolean isEmpty() {
-			final Color center_color = getCenterColor();
-			final int min_red = 63;
-			final int max_red = 72;
-			final int min_green = 53;
-			final int max_green = 64;
-			final int min_blue = 44;
-			final int max_blue = 52;
-			if (center_color != null) {
-				final int center_red = center_color.getRed();
-				final int center_green = center_color.getGreen();
-				final int center_blue = center_color.getBlue();
-				if (center_red >= min_red && center_red <= max_red) {
-					if (center_green >= min_green && center_green <= max_green) {
-						if (center_blue >= min_blue && center_blue <= max_blue) {
-							return true;
+			final Color search_color = new Color(63, 53, 44);
+			for (final Color slot_color : getColors()) {
+				final double distance = ColorUtil.getDistance(slot_color, search_color);
+				if (distance > 0.0925) {
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		public boolean isSelected() {
+			final Rectangle bounds = getBounds();
+			Color previous_color = null;
+			Point previous_point = null;
+			for (int x = bounds.x; x < bounds.x + bounds.width; x += 1) {
+				for (int y = bounds.y; y < bounds.y + bounds.height; y += 1) {
+					if (previous_color != null && previous_point != null) {
+						if (ColorUtil.getDistance(SLOT_BACKGROUND, previous_color) <= 0.0925) {
+							if (Game.getColorAt(x, y).equals(Color.WHITE)) {
+								if (Calculations.getDistanceBetween(previous_point, new Point(x, y)) <= 1) {
+									return true;
+								}
+							}
 						}
 					}
+					previous_color = Game.getColorAt(x, y);
+					previous_point = new Point(x, y);
 				}
 			}
 			return false;
@@ -123,15 +124,30 @@ public class Inventory {
 		public void click(final boolean left) {
 			Mouse.click(getCenter(), left);
 		}
-		
+
 	}
 
-	public static boolean isOpen() {
-		return Game.getOpenTab().equals(Game.Tab.INVENTORY);
+	public static boolean isOpen() { 
+		if (Tabs.getOpenTab() != null) { 
+			if (Tabs.getOpenTab().equals(Tab.INVENTORY)) { 
+				return true; 
+			} 
+		} 
+		return Bank.isOpen(); 
 	}
-	
-	public static void open() {
-		Game.openTab(Game.Tab.INVENTORY);
+
+	public static boolean open() {
+		if (isOpen()) {
+			return true;
+		} else {
+			Tabs.openTab(Tab.INVENTORY);
+			Timing.waitFor(1000, new Condition() {
+				public boolean isMet() {
+					return isOpen();
+				}
+			});
+			return true;
+		}
 	}
 	
 	public static int getCount() {
@@ -145,26 +161,22 @@ public class Inventory {
 		return count;
 	}
 	
-	public static int getCount(final Color... colors) {
+	public static int getCount(final Color color, final double threshold) {
 		open();
 		int count = 0;
-		Slots: for (final Slot slot : Slot.values()) {
-			if (!slot.isEmpty()) {
-				for (final Color slot_color : slot.getColors()) {
-					boolean found_color = false;
-					for (final Color c : colors) {
-						if (found_color) {
-							continue Slots;
-						}
-						if (slot_color.equals(c)) {
-							count++;
-							found_color = true;
-						}
-					}
+		for (final Slot slot : Slot.values()) {
+			for (final Color slot_color : slot.getColors()) {
+				if (ColorUtil.getDistance(slot_color, color) <= threshold) {
+					count += 1;
+					break;
 				}
 			}
 		}
 		return count;
+	}
+	
+	public static int getCount(final Color color) {
+		return getCount(color, 0.0);
 	}
 	
 	public static boolean isEmpty() {
@@ -177,22 +189,35 @@ public class Inventory {
 	
 	public static Slot getSlotAt(final int index) {
 		for (final Slot slot : Slot.values()) {
-			if (slot.getIndex() == index) {
+			if (slot.ordinal() == index) {
 				return slot;
 			}
 		}
 		return null;
 	}
 	
-	public static Slot getSlotWithColor(final Color color) {
+	public static Slot getSlotWithColor(final Color color, final double threshold) {
 		for (final Slot slot : Slot.values()) {
 			for (final Color slot_color : slot.getColors()) {
-				if (slot_color.equals(color)) {
+				if (ColorUtil.getDistance(slot_color, color) <= threshold) {
 					return slot;
 				}
 			}
 		}
 		return null;
+	}
+
+	public static Slot getSlotWithColor(final Color color) {
+		return getSlotWithColor(color, 0.0);
+	}
+	
+	public static boolean isItemSelected() {
+		for (final Slot slot : Inventory.Slot.values()) {
+			if (slot.isSelected()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

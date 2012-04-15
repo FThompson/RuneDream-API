@@ -4,6 +4,8 @@ import org.runedream.input.KeyboardHandler;
 
 /**
  * Keyboard input methods.
+ * 
+ * @author Vulcan
  */
 public class Keyboard {
 	
@@ -47,6 +49,11 @@ public class Keyboard {
 		KeyboardHandler.sendKey(key);
 	}
 	
+	/**
+	 * Sends a given key with a delay.
+	 * @param key The character to type.
+	 * @param delay The time to delay before typing.
+	 */
 	public static void sendKey(final char key, final int delay) {
 		KeyboardHandler.sendKey(key, delay);
 	}
@@ -59,14 +66,32 @@ public class Keyboard {
 		KeyboardHandler.sendKey((char) key);
 	}
 	
+	/**
+	 * Sends a given key with a delay.
+	 * @param key The character to type.
+	 * @param delay The time to delay before typing.
+	 */
 	public static void sendKey(final int key, final int delay) {
 		KeyboardHandler.sendKey((char) key, delay);
 	}
 	
+	/**
+	 * Sends a set of keys with a delay between each type.
+	 * @param keys The string to type.
+	 * @param pressEnter <tt>true</tt> to press Enter after typing the string; <tt>false</tt> to not.
+	 * @param delay The time to delay between each key.
+	 */
 	public static void sendKeys(final String keys, final boolean pressEnter, final int delay) {
 		KeyboardHandler.sendKeys(keys, pressEnter, delay);
 	}
 	
+	/**
+	 * Sends a set of keys with a delay between each type.
+	 * @param keys The string to type.
+	 * @param pressEnter <tt>true</tt> to press Enter after typing the string; <tt>false</tt> to not.
+	 * @param minDelay The minimum time to delay between each key.
+	 * @param maxDelay The maximum time to delay between each key.
+	 */
 	public static void sendKeys(final String keys, final boolean pressEnter, final int minDelay, final int maxDelay) {
 		KeyboardHandler.sendKeys(keys, pressEnter, minDelay, maxDelay);
 	}

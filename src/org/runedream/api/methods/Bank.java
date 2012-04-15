@@ -3,30 +3,25 @@ package org.runedream.api.methods;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.List;
 
-import org.runedream.api.Script;
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Keyboard;
 import org.runedream.api.methods.Mouse;
 import org.runedream.api.util.Log;
 import org.runedream.api.util.Random;
-import org.runedream.api.wrappers.ColorPattern;
-import org.runedream.api.wrappers.ColorPoint;
+import org.runedream.api.util.Time;
 
+/**
+ * Banking-related methods.
+ * <br>
+ * Note: Many methods contain only partial implementations, which will be completed for 1.04.
+ * 
+ * @author Static
+ */
 public class Bank {
-	
-	public static final ColorPattern OPEN_PATTERN = new ColorPattern(new ColorPoint[]{
-			new ColorPoint(64, 33, 73, 66, 50), new ColorPoint(21, 265, 85, 79, 63),
-			new ColorPoint(266, 319, 89, 76, 63), new ColorPoint(489, 285, 35, 30, 23)
-	});
-	public static final ColorPattern EQUIP_OPEN_PATTERN = new ColorPattern(new ColorPoint[]{
-			new ColorPoint(24, 14, 73, 66, 50), new ColorPoint(268, 21, 255, 152, 31),
-			new ColorPoint(474, 51, 206, 205, 62), new ColorPoint(352, 322, 73, 64, 52)
-	});
-	public static final ColorPattern NOTED_PATTERN = new ColorPattern(new ColorPoint[]{
-			new ColorPoint(223, 303, 165, 161, 123), new ColorPoint(234, 403, 46, 36, 27),
-			new ColorPoint(227, 314, 118, 115, 85), new ColorPoint(232, 313, 195, 192, 165)
-	});
+
+	public static final Rectangle ITEM_WINDOW = new Rectangle(23, 81, 474, 215);
 
 	/**
 	 * An enum of bank buttons.
@@ -103,7 +98,13 @@ public class Bank {
 	 * @return <tt>true</tt> if bank is open; otherwise <tt>false</tt>.
 	 */
 	public static boolean isOpen() {
-		return OPEN_PATTERN.isPresent(Game.getImage()) || isEquipmentOpen();
+		final List<Point> bank_points = ImageUtil.getPointsWithColor(Game.getImage(), new Color(242, 170, 62), 0.01);
+		if (bank_points.size() > 0) {
+			final Point bank = bank_points.get(Random.random(0, bank_points.size()));
+			return Game.VIEWPORT.contains(bank) || isEquipmentOpen();
+
+		}
+		return false;
 	}
 
 	/**
@@ -118,7 +119,6 @@ public class Bank {
 			}
 		});
 	}
-
 
 	/**
 	 * Opens the bank view.
@@ -138,7 +138,121 @@ public class Bank {
 	 * @return <tt>true</tt> if equipment window is open; otherwise <tt>false</tt>.
 	 */
 	public static boolean isEquipmentOpen() {
-		return EQUIP_OPEN_PATTERN.isPresent(Game.getImage());
+		Log.log("Not yet implemented: Bank#isEquipmentOpen()");
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param amount The amount of the item to deposit
+	 * @param color The color of the item to deposit
+	 * @param threshold The threshold to allow for color searching
+	 * @return if the item was deposited or not
+	 */
+	public static boolean withdraw(final int amount, final Color color, final double threshold) {
+		final int pre_count = Inventory.getCount();
+		final boolean left_click = amount == 1;
+		boolean type_amount = false;
+		int offset = 0;
+		if (!left_click) {
+			if (amount == -1) {
+				offset = 80;
+			} else if (amount == 0) {
+				offset = 105;
+			} else if (amount == 5) {
+				offset = 40;
+			} else if (amount == 10) {
+				offset = 60;
+			}
+			if (amount > -1 && amount > 10) {
+				offset = 90;
+				type_amount = true;
+			}
+		}
+		final List<Point> points = Game.getPointsWithColor(color, threshold);
+		if (points.size() > 0) {
+			final Point point = points.get(Random.random(0, points.size()));
+			if (ITEM_WINDOW.contains(point)) {
+				if (left_click) {
+					Mouse.click(point);
+					Timing.waitFor(2000, new Timing.Condition() {
+						public boolean isMet() {
+							return Inventory.getCount() > pre_count;
+						}
+					});
+					return Inventory.getCount() > pre_count;
+				}
+				Mouse.click(point, false);
+				Time.sleep(400, 500);
+				Mouse.click(Mouse.getLocation().x, Mouse.getLocation().y + offset);
+				if (type_amount) {
+					Time.sleep(1200, 1600);
+					Keyboard.sendKeys(Integer.toString(amount));
+				}
+				Timing.waitFor(2000, new Timing.Condition() {
+					public boolean isMet() {
+						return Inventory.getCount() > pre_count;
+					}
+				});
+				return Inventory.getCount() > pre_count;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param amount The amount of the item to deposit
+	 * @param color The color of the item to deposit
+	 * @param threshold The threshold to allow for color searching
+	 * @return if the item was deposited or not
+	 */
+	public static boolean deposit(final int amount, final Color color, final double threshold) {
+		final int item_count = Inventory.getCount(color, threshold);
+		final Inventory.Slot slot = Inventory.getSlotWithColor(color, threshold);
+		final Point point = slot.getCenter();
+		final boolean left_click = amount == 1;
+		boolean type_amount = false;
+		int offset = 0;
+		if (!left_click) {
+			if (amount == -1) {
+				offset = 80 - (item_count > 5 ? 0 : 20);
+			} else if (amount == 0) {
+				offset = 105 - (item_count > 5 ? 0 : 20);
+			} else if (amount == 5) {
+				offset = 40;
+			} else if (amount == 10) {
+				offset = 60;
+			}
+			if (amount > -1 && amount > 10) {
+				offset = 90;
+				type_amount = true;
+			}
+		} else {
+			Mouse.click(point);
+			Timing.waitFor(2000, new Timing.Condition() {
+				public boolean isMet() {
+					return slot.isEmpty();
+				}
+			});
+			return slot.isEmpty();
+		}
+		if (!slot.isEmpty()) {
+			Mouse.click(point, false);
+			Time.sleep(50, 125);
+			Mouse.click((int) point.getX(), (int) point.getY() + (point.getY() + 50 < 460 ? offset : 463));
+			if (type_amount) {
+				Time.sleep(1200, 1600);
+				Keyboard.sendKeys(Integer.toString(amount));
+			}
+			Timing.waitFor(1500, new Timing.Condition() {
+				public boolean isMet() {
+					return slot.isEmpty();
+				}
+			});
+			return slot.isEmpty();
+		}
+		return false;
 	}
 
 	/**
@@ -153,12 +267,12 @@ public class Bank {
 			}
 		})) {
 			Keyboard.sendKeys(search);
-			Script.sleep(800, 1000);
+			Time.sleep(800, 1000);
 		}*/
 		// TODO ^ code once isSearchOpen() is implemented
-		Script.sleep(800, 1000);
+		Time.sleep(800, 1000);
 		Keyboard.sendKeys(search);
-		Script.sleep(800, 1000);
+		Time.sleep(800, 1000);
 	}
 	
 	/**
@@ -193,7 +307,8 @@ public class Bank {
 	 * @return <tt>true</tt> if noted; otherwise <tt>false</tt>.
 	 */
 	public static boolean isWithdrawalModeNoted() {
-		return NOTED_PATTERN.isPresent(Game.getImage());
+		Log.log("Not yet implemented: isWithdrawalModeNoted()");
+		return false;
 	}
 
 	/**
@@ -225,3 +340,4 @@ public class Bank {
 	}
 
 }
+
