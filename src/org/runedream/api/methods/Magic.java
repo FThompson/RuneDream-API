@@ -21,17 +21,40 @@ public class Magic {
 	 * @author Vulcan
 	 */
 	public static interface SortButton {
+		
+		/**
+		 * Gets the button's name.
+		 * @return The button's name.
+		 */
 		public String getName();
-		
+
+		/**
+		 * Gets the button's bounding rectangle.
+		 * @return The button's bounding rectangle.
+		 */
 		public Rectangle getBounds();
-		
+
+		/**
+		 * Gets the button's center point.
+		 * @return The button's center point.
+		 */
 		public Point getCenter();
-		
+
+		/**
+		 * Clicks the button.
+		 */
 		public void click();
 		
+		/**
+		 * Clicks the button.
+		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
+		 */
 		public void click(final boolean left);
 	}
 	
+	/**
+	 * An enumeration of modern spellbook sort buttons.
+	 */
 	public enum ModernButton implements SortButton {
 		BUTTON_TOGGLE_CASTING("Toggle Defensive Casting", new Rectangle(557, 443, 13, 13)),
 		BUTTON_COMBAT_SPELLS("Toggle Combat Spells", new Rectangle(586, 443, 13, 13)),
@@ -71,9 +94,11 @@ public class Magic {
 		public void click(final boolean left) {
 			Mouse.click(getCenter(), left);
 		}
-		
 	}
-	
+
+	/**
+	 * An enumeration of ancient spellbook sort buttons.
+	 */
 	public enum AncientButton implements SortButton {
 		BUTTON_TOGGLE_CASTING("Toggle Defensive Casting", new Rectangle(565, 443, 13, 13)),
 		BUTTON_COMBAT_SPELLS("Toggle Combat Spells", new Rectangle(598, 443, 13, 13)),
@@ -109,9 +134,11 @@ public class Magic {
 		public void click(final boolean left) {
 			Mouse.click(getCenter(), left);
 		}
-		
 	}
-	
+
+	/**
+	 * An enumeration of lunar spellbook sort buttons.
+	 */
 	public enum LunarButton implements SortButton {
 		BUTTON_TOGGLE_CASTING("Toggle Defensive Casting", new Rectangle(557, 443, 13, 13)),
 		BUTTON_COMBAT_SPELLS("Toggle Combat Spells", new Rectangle(586, 443, 13, 13)),
@@ -153,10 +180,17 @@ public class Magic {
 		}
 	}
 
+	/**
+	 * Checks if the inventory tab is open.
+	 * @return <tt>true</tt> if open; otherwise <tt>false</tt>.
+	 */
 	public static boolean isOpen() {
-		return Tabs.getOpenTab().equals(Tab.MAGIC);
+		return Tabs.getOpenTab() != null && Tabs.getOpenTab().equals(Tab.MAGIC);
 	}
-	
+
+	/**
+	 * Opens the magic tab.
+	 */
 	public static void open() {
 		Tabs.openTab(Tab.MAGIC);
 	}

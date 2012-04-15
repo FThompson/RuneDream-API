@@ -1,4 +1,4 @@
-package org.runedream.api.wrappers;
+package org.runedream.api.net;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -48,58 +48,115 @@ public class GeItem {
 		this.typeIconUrl = typeIconUrl;
 	}
 
+	/**
+	 * Gets the item's 30 day change percentage.
+	 * @return The item's 30 day change percentage.
+	 */
 	public double getChange30Days() {
 		return changes[0];
 	}
 
+	/**
+	 * Gets the item's 90 day change percentage.
+	 * @return The item's 90 day change percentage.
+	 */
 	public double getChange90Days() {
 		return changes[1];
 	}
 
+	/**
+	 * Gets the item's 180 day change percentage.
+	 * @return The item's 180 day change percentage.
+	 */
 	public double getChange180Days() {
 		return changes[2];
 	}
 
+	/**
+	 * Gets the item's change today.
+	 * @return The item's change today.
+	 */
 	public int getChangeToday() {
 		return changeToday;
 	}
 
+	/**
+	 * Gets the item's description.
+	 * @return The item's description.
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * Gets the item's icon url.
+	 * @return The item's icon url.
+	 */
 	public String getIconUrl() {
 		return iconUrl;
 	}
 
+	/**
+	 * Gets the item's id.
+	 * @return The item's id.
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Gets the item's large icon url.
+	 * @return The item's large icon url.
+	 */
 	public String getLargeIconUrl() {
 		return largeIconUrl;
 	}
 
+	/**
+	 * Gets the item's name.
+	 * @return The item's name.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Gets the item's current price.
+	 * @return The item's current price.
+	 */
 	public int getPrice() {
 		return price;
 	}
 
+	/**
+	 * Gets the item's type category.
+	 * @return The item's type category.
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * Gets the item's type category icon url.
+	 * @return The item's type category icon url.
+	 */
 	public String getTypeIconUrl() {
 		return typeIconUrl;
 	}
 
+	/**
+	 * Checks if the item is members-only.
+	 * @return <tt>true</tt> if members; otherwise <tt>false</tt>.
+	 */
 	public boolean isMembers() {
 		return members;
 	}
 
+	/**
+	 * Looks up the GeItem of a given id, returning null if failed.
+	 * @param itemId The id to lookup.
+	 * @return A valid GeItem.
+	 */
 	public static GeItem lookup(int itemId) {
 		try {
 			URL url = new URL(HOST + GET_ID + itemId);
@@ -131,7 +188,12 @@ public class GeItem {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Looks up the first GeItem of a given name, returning null if failed.
+	 * @param itemName The name to look up.
+	 * @return A valid GeItem.
+	 */
 	public static GeItem lookup(String itemName) {
 		try {
 			itemName = itemName.toLowerCase();
@@ -186,6 +248,9 @@ public class GeItem {
 		return "";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getName()).append("[");

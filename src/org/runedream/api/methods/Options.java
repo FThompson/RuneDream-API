@@ -16,14 +16,24 @@ import org.runedream.api.wrappers.Tab;
  */
 public class Options {
 
+	/**
+	 * Checks if the inventory tab is open.
+	 * @return <tt>true</tt> if open; otherwise <tt>false</tt>.
+	 */
 	public static boolean isOpen() {
-		return Tabs.getOpenTab().equals(Tab.OPTIONS);
+		return Tabs.getOpenTab() != null && Tabs.getOpenTab().equals(Tab.OPTIONS);
 	}
-	
+
+	/**
+	 * Opens the options tab.
+	 */
 	public static void open() {
 		Tabs.openTab(Tab.OPTIONS);
 	}
 	
+	/**
+	 * An enumeration of the game chat modes.
+	 */
 	public enum ChatMode {
 		ALL("View all", new Rectangle(3, 481, 55, 21)),
 		GAME("View Game", new Rectangle(60, 481, 55, 21)),
@@ -34,6 +44,9 @@ public class Options {
 		TRADE("View Trade", new Rectangle(345, 481, 55, 21)),
 		ASSIST("View Assist", new Rectangle(402, 481, 55, 21));
 		
+		/**
+		 * An enumeration of the possible chat mode settings.
+		 */
 		public enum ChatSetting {
 			ON(new Color(0, 255, 0)),
 			OFF(new Color(255, 0, 0)),
@@ -46,6 +59,10 @@ public class Options {
 				this.color = color;
 			}
 			
+			/**
+			 * Gets the chat setting's color.
+			 * @return The chat setting's color.
+			 */
 			public Color getColor() {
 				return color;
 			}
@@ -59,18 +76,34 @@ public class Options {
 			this.bounds = bounds;
 		}	
 		
+		/**
+		 * Gets the chat mode's name.
+		 * @return The chat mode's name.
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Gets the chat mode's bounding rectangle.
+		 * @return The chat mode's bounding rectangle.
+		 */
 		public Rectangle getBounds() {
 			return bounds;
 		}
 
+		/**
+		 * Gets the chat mode's center point.
+		 * @return The chat mode's center point.
+		 */
 		public Point getCenter() {
 			return new Point((int) (bounds.x + (bounds.width / 2)), (int) (bounds.y + (bounds.height / 2)));
 		}
 
+		/**
+		 * Gets the chat mode's color array.
+		 * @return The chat mode's color array.
+		 */
 		public Color[] getColors() {
 			final List<Color> colors = new LinkedList<Color>();
 			for (int x = bounds.x; x < bounds.x + bounds.width; x++) {
@@ -84,10 +117,25 @@ public class Options {
 			return colors.toArray(new Color[colors.size()]);
 		}
 
+		/**
+		 * Clicks the chat mode button.
+		 */
 		public void click() {
-			Mouse.click(getCenter(), 6, 6);
+			click(true);
 		}
 		
+		/**
+		 * Clicks the chat mode button.
+		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
+		 */
+		public void click(final boolean left) {
+			Mouse.click(getCenter(), 6, 6, left);
+		}
+		
+		/**
+		 * Gets the chat mode's current chat setting.
+		 * @return The chat mode's current chat setting.
+		 */
 		public ChatSetting getSetting() {
 			final List<Color> button_colors = Arrays.asList(getColors());
 			for (final ChatSetting setting : ChatSetting.values()) {
@@ -97,10 +145,12 @@ public class Options {
 			}
 			return ChatSetting.OFF;
 		}
-
 	}
 	
-	public enum Settings {
+	/**
+	 * An enumeration of option buttons.
+	 */
+	public enum OptionButton {
 		GRAPHICS("Graphics Settings", new Rectangle(566, 246, 39, 39)), 
 		AUDIO("Audio Settings", new Rectangle(622, 246, 39, 39)), 
 		MOUSE_BUTTONS("Toggle Mouse Buttons", new Rectangle(678, 246, 39, 39)),
@@ -115,27 +165,49 @@ public class Options {
 		private final String name;
 		private final Rectangle bounds;
 
-		private Settings(final String name, final Rectangle bounds) {
+		private OptionButton(final String name, final Rectangle bounds) {
 			this.name = name;
 			this.bounds = bounds;
 		}
 		
+		/**
+		 * Gets the button's name.
+		 * @return The button's name.
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Gets the button's bounding rectangle.
+		 * @return The button's bounding rectangle.
+		 */
 		public Rectangle getBounds() {
 			return bounds;
 		}
 
+		/**
+		 * Gets the button's center point.
+		 * @return The button's center point.
+		 */
 		public Point getCenter() {
 			return new Point((int) (bounds.x + (bounds.width / 2)), (int) (bounds.y + (bounds.height / 2)));
 		}
 		
+		/**
+		 * Clicks the button.
+		 */
 		public void click() {
-			Mouse.click(getCenter(), 6, 6);
+			click(true);
 		}
 		
+		/**
+		 * Clicks the button.
+		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
+		 */
+		public void click(final boolean left) {
+			Mouse.click(getCenter(), 6, 6, left);
+		}
 	}
 
 }

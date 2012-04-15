@@ -93,12 +93,12 @@ public class OCR {
 	/**
 	 * NOTE THE MORE VARIABLES YOU DEFINE THE FASTER THIS WILL BE AND THE SMALLER THE RECTANGLE THE FASTER IT WILL BE
 	 * SO TRY NOT TO RUN THIS WITH NO FONT SPECIFIED AND NO COLOR OF THE TEXT SPECIFIED BECAUSE IT DRASTICALLY INCREASES THE AMOUNT
-	 * OF OPERATIONS IT MUST PERFORM. I AM WORKING ON A HELPER SCRIPT THAT WILL MAKE THIS A LOT EASIER
+	 * OF OPERATIONS IT MUST PERFORM. I AM WORKING ON A HELPER SCRIPT THAT WILL MAKE THIS A LOT EASIER -battlegaurd
 	 */
 	
 	/**
 	 * Finds text within a rectangle of the specified font.
-	 * </br>
+	 * <br>
 	 * To optimize performance, minimize the bounds of the rectangle, define the color, and define the font.
 	 * @param fontC The color of the text inside of the rectangle; or null to search for any color.
 	 * @param rec The rectangle to search within.
@@ -111,7 +111,7 @@ public class OCR {
 
 	/**
 	 * Finds text within a rectangle of any supported font.
-	 * </br>
+	 * <br>
 	 * To optimize performance, minimize the bounds of the rectangle and define the color.
 	 * @param rec The rectangle to search within.
 	 * @param fontC The color of the text inside of the rectangle; or null to search for any color.
@@ -123,7 +123,7 @@ public class OCR {
 
 	/**
 	 * Finds text within a rectangle of the specified font.
-	 * </br>
+	 * <br>
 	 * To optimize performance, minimize the bounds of the rectangle, define the color, and define the font.
 	 * @param rec The rectangle to search within.
 	 * @param fontC The color of the text inside of the rectangle; or null to search for any color.
@@ -137,7 +137,7 @@ public class OCR {
 
 	/**
 	 * Finds text within a rectangle of any supported font.
-	 * </br>
+	 * <br>
 	 * To optimize performance, minimize the bounds of the rectangle and define the color.
 	 * @param rec The rectangle to search within.
 	 * @param fontC The color of the text inside of the rectangle; or null to search for any color.
@@ -150,7 +150,7 @@ public class OCR {
 
 	/**
 	 * Finds text within a rectangle.
-	 * </br>
+	 * <br>
 	 * To optimize performance, minimize the bounds of the rectangle, define the color, and define the font.
 	 * @param fontC The color of the text inside of the rectangle; or null to search for any color.
 	 * @param rec The rectangle to search within.
@@ -206,6 +206,10 @@ public class OCR {
 		return sortLetters(nums);
 	}
 	
+	/**
+	 * Gets the game uptext (text in the top left corner).
+	 * @return The game uptext.
+	 */
 	public static String getUpText() {
 		return UpTextOCR.getUpText();
 	}

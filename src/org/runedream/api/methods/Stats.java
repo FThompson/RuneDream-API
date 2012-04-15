@@ -15,6 +15,9 @@ public class Stats {
 	
 	public static final Rectangle BOUNDS = new Rectangle(545, 206, 192, 260);
 	
+	/**
+	 * An enumeration of the stats.
+	 */
 	public enum Stat {
 		ATTACK("Attack", new Rectangle(551, 212, 52, 22)),
 		CONSTITUTION("Constitution", new Rectangle(614, 212, 52, 22)),
@@ -50,31 +53,57 @@ public class Stats {
 			this.bounds = bounds;
 		}
 		
+		/**
+		 * Gets the stat's name.
+		 * @return The stat's name.
+		 */
 		public String getName() {
 			return name;
 		}
 		
+		/**
+		 * Gets the stat's bounding rectangle.
+		 * @return The stat's bounding rectangle.
+		 */
 		public Rectangle getBounds() {
 			return bounds;
 		}
 		
+		/**
+		 * Gets the stat's center point.
+		 * @return The stat's center point.
+		 */
 		public Point getCenter() {
 			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
 		}
 		
+		/**
+		 * Clicks the stat.
+		 */
 		public void click() {
-			Mouse.click(getCenter());
+			click(false);
 		}
 		
+		/**
+		 * Clicks the stat.
+		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
+		 */
 		public void click(final boolean left) {
-			Mouse.click(getCenter(), left);
+			Mouse.click(getCenter(), 6, 6, left);
 		}
 	}
 
+	/**
+	 * Checks if the inventory tab is open.
+	 * @return <tt>true</tt> if open; otherwise <tt>false</tt>.
+	 */
 	public static boolean isOpen() {
-		return Tabs.getOpenTab().equals(Tab.STATS);
+		return Tabs.getOpenTab() != null && Tabs.getOpenTab().equals(Tab.STATS);
 	}
-	
+
+	/**
+	 * Opens the stats tab.
+	 */
 	public static void open() {
 		Tabs.openTab(Tab.STATS);
 	}

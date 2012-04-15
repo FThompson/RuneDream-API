@@ -88,7 +88,7 @@ public class Bank {
 		 * Clicks the button.
 		 */
 		public void click() {
-			Mouse.click(getCenter(), 6, 6);
+			Mouse.click(getCenter(), 3, 3);
 		}
 
 	}
@@ -143,7 +143,7 @@ public class Bank {
 	}
 	
 	/**
-	 * 
+	 * Withdraws an item with a given color.
 	 * @param amount The amount of the item to deposit
 	 * @param color The color of the item to deposit
 	 * @param threshold The threshold to allow for color searching
@@ -201,7 +201,7 @@ public class Bank {
 	}
 	
 	/**
-	 * 
+	 * Deposits an item of with a given color.
 	 * @param amount The amount of the item to deposit
 	 * @param color The color of the item to deposit
 	 * @param threshold The threshold to allow for color searching

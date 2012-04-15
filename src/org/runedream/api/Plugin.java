@@ -1,7 +1,6 @@
 package org.runedream.api;
 
 import java.awt.Color;
-import java.util.EventListener;
 import java.util.logging.Logger;
 
 import javax.swing.JInternalFrame;
@@ -13,16 +12,18 @@ import org.runedream.internal.plugin.PluginManager;
 
 /**
  * Abstract class to be extended by plugins.
+ * 
+ * @author Vulcan
  */
-public abstract class Plugin extends JInternalFrame implements EventListener, Runnable {
+public abstract class Plugin extends JInternalFrame implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	private final PluginManifest manifest;
 	private final Logger log;
 	
 	public Plugin() {
-		manifest = super.getClass().getAnnotation(PluginManifest.class);
-		log = Logger.getLogger(super.getClass().getName());
+		manifest = getClass().getAnnotation(PluginManifest.class);
+		log = Logger.getLogger(getClass().getName());
 		setTitle(manifest.name() + " v" + manifest.version());
 		if (manifest.description() != null) {
 			setToolTipText(manifest.description());
@@ -52,7 +53,6 @@ public abstract class Plugin extends JInternalFrame implements EventListener, Ru
 	/**
 	 * Main method of plugin that is called if onStart() performs successfully.
 	 */
-	@Override
 	public abstract void run();
 
 	/**
@@ -88,6 +88,9 @@ public abstract class Plugin extends JInternalFrame implements EventListener, Ru
 		Log.log(log, message, color);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(final Object object) {
 		if (object instanceof Plugin && object.getClass().isAnnotationPresent(PluginManifest.class)) {

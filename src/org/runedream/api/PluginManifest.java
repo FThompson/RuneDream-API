@@ -3,17 +3,37 @@ package org.runedream.api;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * Annotation for defining Plugin attributes.
+ * 
+ * @author Vulcan
+ */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PluginManifest {
 	
+	/**
+	 * The plugin's name.
+	 */
 	String name();
 	
+	/**
+	 * The plugin's version.
+	 */
 	double version() default 1.0;
-	
+
+	/**
+	 * The plugin's authors.
+	 */
 	String[] authors();
-	
+
+	/**
+	 * A short description of the plugin.
+	 */
 	String description() default "";
-	
+
+	/**
+	 * Keyboards related to the plugin.
+	 */
 	String[] keywords() default { };
 	
 	/**
@@ -35,5 +55,10 @@ public @interface PluginManifest {
 	 * The height to set the dimension of the plugin to initially.
 	 */
 	int height() default 100;
+
+	/**
+	 * The plugin's script repository type.
+	 */
+	LoadableType type() default LoadableType.FREE;
 
 }

@@ -22,20 +22,35 @@ public class Prayer {
 	public static final Color QUICKPRAYER_ACTIVATED = new Color(155, 186, 150);
 	public static final Rectangle QUICKPRAYER_BOUNDS = new Rectangle(705, 53, 34, 33);
 	public static final Rectangle QUICKPRAYER_TEXT_BOUNDS = new Rectangle(740, 62, 22, 23);
-	
+
+	/**
+	 * Checks if the inventory tab is open.
+	 * @return <tt>true</tt> if open; otherwise <tt>false</tt>.
+	 */
 	public static boolean isOpen() {
-		return Tabs.getOpenTab().equals(Tab.PRAYER);
+		return Tabs.getOpenTab() != null && Tabs.getOpenTab().equals(Tab.PRAYER);
 	}
-	
+
+	/**
+	 * Opens the prayer tab.
+	 */
 	public static void open() {
 		Tabs.openTab(Tab.PRAYER);
 	}
 	
-	public static Point getButtonCenter() {
+	/**
+	 * Gets the center of the quick prayer button.
+	 * @return The center of the quick prayer button.
+	 */
+	public static Point getQuickPrayerButtonCenter() {
 		return new Point((int) (QUICKPRAYER_BOUNDS.x + (QUICKPRAYER_BOUNDS.width / 2)), (int) (QUICKPRAYER_BOUNDS.y + (QUICKPRAYER_BOUNDS.height / 2)));
 	}
 	
-	public static Color[] getButtonColors() {
+	/**
+	 * Gets the quick prayer button color array.
+	 * @return The quick prayer button color array.
+	 */
+	public static Color[] getQuickPrayerButtonColors() {
 		final List<Color> colors = new LinkedList<Color>();
 		for (int x = QUICKPRAYER_BOUNDS.x; x < QUICKPRAYER_BOUNDS.x + QUICKPRAYER_BOUNDS.width; x++) {
 			for (int y = QUICKPRAYER_BOUNDS.y; y < QUICKPRAYER_BOUNDS.y + QUICKPRAYER_BOUNDS.height; y++) {
@@ -48,18 +63,30 @@ public class Prayer {
 		return colors.toArray(new Color[colors.size()]);
 	}
 	
+	/**
+	 * Checks if quick prayers are activated.
+	 * @return <tt>true</tt> if activated; otherwise <tt>false</tt>.
+	 */
 	public static boolean isQuickPrayerActivated() {
-		final List<Color> colors = Arrays.asList(getButtonColors());
+		final List<Color> colors = Arrays.asList(getQuickPrayerButtonColors());
 		return colors.contains(QUICKPRAYER_ACTIVATED);
 	}
 	
+	/**
+	 * Activates or deactivates quick prayers.
+	 * @param activated <tt>true</tt> to activate quick prayers; <tt>false</tt> to deactivate.
+	 * @return <tt>true</tt> if set successfully; otherwise <tt>false</tt>.
+	 */
 	public static boolean setQuickPrayerEnabled(final boolean activated) {
 		if (isQuickPrayerActivated() != activated) {
-			Mouse.click(getButtonCenter());
+			Mouse.click(getQuickPrayerButtonCenter());
 		}
 		return isQuickPrayerActivated();
 	}
-		
+	
+	/**
+	 * Modern prayer enum.
+	 */
 	public enum Modern implements Effect {
 		THICK_SKIN("Thick Skin", 1, new Rectangle(555, 212, 30, 32)),
 		BURST_STRENGTH("Burst Strength", 4, new Rectangle(592, 212, 30, 32)), 
@@ -229,22 +256,53 @@ public class Prayer {
 		}
 	}
 	
+	/**
+	 * Prayer effect interface.
+	 */
 	public interface Effect {
 		
+		/**
+		 * Gets the prayer's name.
+		 * @return The prayer's name.
+		 */
 		public String getName();
-		
+
+		/**
+		 * Gets the prayer's required level.
+		 * @return The prayer's required level.
+		 */
 		public int getLevel();
-		
+
+		/**
+		 * Gets the prayer's bounding rectangle.
+		 * @return The prayer's bounding rectangle.
+		 */
 		public Rectangle getBounds();
-		
+
+		/**
+		 * Gets the prayer's center point.
+		 * @return The prayer's center point.
+		 */
 		public Point getCenter();
-		
+
+		/**
+		 * Gets the prayer's color array.
+		 * @return The prayer's color array.
+		 */
 		public Color[] getColors();
-		
+
+		/**
+		 * Checks if the prayer is activated.
+		 * @return <tt>true</tt> if active; otherwise <tt>false</tt>.
+		 */
 		public boolean isActivated();
 		
+		/**
+		 * Activates or deactivates the prayer.
+		 * @param activated <tt>true</tt> to activate the prayer; <tt>false</tt> to deactivate.
+		 * @return <tt>true</tt> if succesfu
+		 */
 		public boolean setEnabled(final boolean activated);
-		
 	}
 
 }

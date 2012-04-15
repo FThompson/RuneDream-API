@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Mouse;
-import org.runedream.api.methods.Timing.Condition;
 import org.runedream.api.wrappers.Tab;
 
 /**
@@ -21,6 +20,9 @@ public class Inventory {
 	public static final Rectangle BOUNDS = new Rectangle(545, 206, 192, 260);
 	public static final Color SLOT_BACKGROUND = new Color(63, 53, 44);
 	
+	/**
+	 * An enumeration of inventory item slots.
+	 */
 	public enum Slot {
 		SLOT_0(new Rectangle(561, 212, 36, 32)),
 		SLOT_1(new Rectangle(603, 212, 36, 32)),
@@ -57,19 +59,35 @@ public class Inventory {
 			this.bounds = bounds;
 		}
 		
+		/**
+		 * Gets the slot's bounding rectangle.
+		 * @return the slot's bounding rectangle.
+		 */
 		public Rectangle getBounds() {
 			return bounds;
 		}
-		
+
+		/**
+		 * Gets the slot's center point.
+		 * @return the slot's center point.
+		 */
 		public Point getCenter() {
 			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
 		}
-		
+
+		/**
+		 * Gets the slot's center point color.
+		 * @return the slot's center point color.
+		 */
 		public Color getCenterColor() {
 			final Point center = getCenter();
 			return Game.isPointValid(center) ? Game.getColorAt(center) : null;
 		}
-		
+
+		/**
+		 * Gets the slot's color array.
+		 * @return the slot's color array.
+		 */
 		public Color[] getColors() {
 			final List<Color> colors = new LinkedList<Color>();
 			for (int x = bounds.x; x < bounds.x + bounds.width; x++) {
@@ -83,11 +101,14 @@ public class Inventory {
 			}
 			return colors.toArray(new Color[colors.size()]);
 		}
-		
+
+		/**
+		 * Checks if the slot has no item.
+		 * @return <tt>true</tt> if the slot is empty; otherwise <tt>false</tt>.
+		 */
 		public boolean isEmpty() {
-			final Color search_color = new Color(63, 53, 44);
 			for (final Color slot_color : getColors()) {
-				final double distance = ColorUtil.getDistance(slot_color, search_color);
+				final double distance = ColorUtil.getDistance(slot_color, SLOT_BACKGROUND);
 				if (distance > 0.0925) {
 					return false;
 				}
@@ -95,6 +116,10 @@ public class Inventory {
 			return true;
 		}
 		
+		/**
+		 * Checks if the item in the slot is selected.
+		 * @return <tt>true</tt> if the item is selected; otherwise <tt>false</tt>.
+		 */
 		public boolean isSelected() {
 			final Rectangle bounds = getBounds();
 			Color previous_color = null;
@@ -117,39 +142,42 @@ public class Inventory {
 			return false;
 		}
 		
+		/**
+		 * Clicks the slot.
+		 */
 		public void click() {
 			Mouse.click(getCenter());
 		}
 		
+		/**
+		 * Clicks the slot.
+		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
+		 */
 		public void click(final boolean left) {
 			Mouse.click(getCenter(), left);
 		}
 
 	}
 
+	/**
+	 * Checks if the inventory tab is open.
+	 * @return <tt>true</tt> if open; otherwise <tt>false</tt>.
+	 */
 	public static boolean isOpen() { 
-		if (Tabs.getOpenTab() != null) { 
-			if (Tabs.getOpenTab().equals(Tab.INVENTORY)) { 
-				return true; 
-			} 
-		} 
-		return Bank.isOpen(); 
+		return Tabs.getOpenTab() != null && Tabs.getOpenTab().equals(Tab.INVENTORY);
 	}
 
-	public static boolean open() {
-		if (isOpen()) {
-			return true;
-		} else {
-			Tabs.openTab(Tab.INVENTORY);
-			Timing.waitFor(1000, new Condition() {
-				public boolean isMet() {
-					return isOpen();
-				}
-			});
-			return true;
-		}
+	/**
+	 * Opens the inventory tab.
+	 */
+	public static void open() {
+		Tabs.openTab(Tab.INVENTORY);
 	}
 	
+	/**
+	 * Gets the count of items in the inventory.
+	 * @return The count of items in the inventory.
+	 */
 	public static int getCount() {
 		open();
 		int count = 0;
@@ -161,6 +189,12 @@ public class Inventory {
 		return count;
 	}
 	
+	/**
+	 * Gets the count of items with the given color in the inventory.
+	 * @param color The color to check for.
+	 * @param threshold The threshold to check the color within.
+	 * @return The count of items with the given color in the inventory.
+	 */
 	public static int getCount(final Color color, final double threshold) {
 		open();
 		int count = 0;
@@ -174,19 +208,37 @@ public class Inventory {
 		}
 		return count;
 	}
-	
+
+	/**
+	 * Gets the count of items with the given color in the inventory.
+	 * @param color The color to check for.
+	 * @return The count of items with the given color in the inventory.
+	 */
 	public static int getCount(final Color color) {
 		return getCount(color, 0.0);
 	}
 	
+	/**
+	 * Checks if the inventory is empty.
+	 * @return <tt>true</tt> if empty; otherwise <tt>false</tt>.
+	 */
 	public static boolean isEmpty() {
 		return getCount() == 0;
 	}
 	
+	/**
+	 * Checks if the inventory is full.
+	 * @return <tt>true</tt> if full; otherwise <tt>false</tt>.
+	 */
 	public static boolean isFull() {
 		return getCount() == 28;
 	}
 	
+	/**
+	 * Gets the slot at a given index.
+	 * @param index The index to get.
+	 * @return The Slot at the given index.
+	 */
 	public static Slot getSlotAt(final int index) {
 		for (final Slot slot : Slot.values()) {
 			if (slot.ordinal() == index) {
@@ -196,6 +248,12 @@ public class Inventory {
 		return null;
 	}
 	
+	/**
+	 * Gets the first slot with a given color.
+	 * @param color The color to check for.
+	 * @param threshold The threshold to check the color within.
+	 * @return The first slow with the given color.
+	 */
 	public static Slot getSlotWithColor(final Color color, final double threshold) {
 		for (final Slot slot : Slot.values()) {
 			for (final Color slot_color : slot.getColors()) {
@@ -207,10 +265,19 @@ public class Inventory {
 		return null;
 	}
 
+	/**
+	 * Gets the first slot with a given color.
+	 * @param color The color to check for.
+	 * @return The first slow with the given color.
+	 */
 	public static Slot getSlotWithColor(final Color color) {
 		return getSlotWithColor(color, 0.0);
 	}
 	
+	/**
+	 * Checks if an item is selected.
+	 * @return <tt>true</tt> if an item is selected; otherwise <tt>false</tt>.
+	 */
 	public static boolean isItemSelected() {
 		for (final Slot slot : Inventory.Slot.values()) {
 			if (slot.isSelected()) {

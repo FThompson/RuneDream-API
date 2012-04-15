@@ -4,11 +4,12 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 /**
- * Wrapper to create an edge detection image via the canny edge detection algorithm.
+ * <p>Wrapper to create an edge detection image via the canny edge detection algorithm.
  * Below are the notes from the original source file, released by Tom Gibara.
- * His website can be found at http://www.tomgibara.com/computer-vision/canny-edge-detector
+ * His website can be found at <a href="http://www.tomgibara.com/computer-vision/canny-edge-detector">
+ * http://www.tomgibara.com/computer-vision/canny-edge-detector</a>.</p>
  * 
- * --------------------------------------------------------------------------------
+ * <p>--------------------------------------------------------------------------------</p>
  * 
  * <p><em>This software has been released into the public domain.
  * <strong>Please read the notes in this source file for additional information.
