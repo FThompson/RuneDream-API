@@ -14,7 +14,10 @@ import org.runedream.api.util.Random;
 /**
  * Image-related utility methods.
  */
-public class ImageUtil {
+public final class ImageUtil {
+	
+	private ImageUtil() {
+	}
 
 	/**
 	 * Gets an image's array of RGB values.
@@ -78,7 +81,7 @@ public class ImageUtil {
 	 * @return A random point meeting the given conditions.
 	 */
 	public static Point getRandomPoint(final BufferedImage image, final Rectangle bounds,
-			final Color color, final double threshold){
+			final Color color, final int threshold){
 		LinkedList<Point> points = getPointsWithColor(image, bounds, color, threshold);
 		return points.size() > 0 ? points.get(Random.random(0, points.size())) : null;
 	}
@@ -90,7 +93,7 @@ public class ImageUtil {
 	 * @param threshold The threshold to scan by.
 	 * @return A random point meeting the given conditions.
 	 */
-	public static Point getRandomPoint(final BufferedImage image, final Color color, final double threshold){
+	public static Point getRandomPoint(final BufferedImage image, final Color color, final int threshold){
 		LinkedList<Point> points = getPointsWithColor(image, color, threshold);
 		return points.size() > 0 ? points.get(Random.random(0, points.size())) : null;
 	}
@@ -127,7 +130,7 @@ public class ImageUtil {
 	 * @return A list of points where the color of the image is within the threshold.
 	 */
 	public static LinkedList<Point> getPointsWithColor(final BufferedImage image, final Rectangle bounds,
-			final Color color, final double threshold) {
+			final Color color, final int threshold) {
 		final LinkedList<Point> points = new LinkedList<Point>();
 		final Color[][] colors = getColors(image);
 		for (int x = bounds.x; x < bounds.width + bounds.x; x++) {
@@ -149,7 +152,7 @@ public class ImageUtil {
 	 */
 	public static LinkedList<Point> getPointsWithColor(final BufferedImage image,
 			final Rectangle bounds, final Color color) {
-		return getPointsWithColor(image, bounds, color, 0.0);
+		return getPointsWithColor(image, bounds, color, 0);
 	}
 
 	/**
@@ -160,7 +163,7 @@ public class ImageUtil {
 	 * @return A list of points where the color of the image is within the threshold.
 	 */
 	public static LinkedList<Point> getPointsWithColor(final BufferedImage image,
-			final Color color, final double threshold) {
+			final Color color, final int threshold) {
 		return getPointsWithColor(image, new Rectangle(image.getWidth(), image.getHeight()), color, threshold);
 	}
 
@@ -171,7 +174,7 @@ public class ImageUtil {
 	 * @return A list of points where the color of the image is equal.
 	 */
 	public static LinkedList<Point> getPointsWithColor(final BufferedImage image, final Color color) {
-		return getPointsWithColor(image, color, 0.0);
+		return getPointsWithColor(image, color, 0);
 	}
 
 	/**
@@ -183,20 +186,21 @@ public class ImageUtil {
 	 * @return A list of points where a color of the image is within the threshold.
 	 */
 	public static LinkedList<Point> getPointsWithColors(final BufferedImage image,
-			final Rectangle bounds, final Color[] colors, final double threshold) {
+			final Rectangle bounds, final Color[] colors, final int threshold) {
 		final LinkedList<Point> points = new LinkedList<Point>();
 		for (int x = bounds.x; x < bounds.width + bounds.x; x++) {
 			for (int y = bounds.y; y < bounds.height + bounds.y; y++) {
 				final Color pointColor = new Color(image.getRGB(x, y));
 				for (final Color color : colors) {
-					final double foundRed = pointColor.getRed(), foundGreen = pointColor
-							.getGreen(), foundBlue = pointColor.getBlue();
-					final double minRed = (color.getRed() - (color.getRed() * threshold)), maxRed = (color
-							.getRed() + (color.getRed() * threshold)), minGreen = (color
-							.getGreen() - (color.getGreen() * threshold)), maxGreen = (color
-							.getGreen() + (color.getGreen() * threshold)), minBlue = (color
-							.getBlue() - (color.getBlue() * threshold)), maxBlue = (color
-							.getBlue() + (color.getBlue() * threshold));
+					final double foundRed = pointColor.getRed();
+					final double foundGreen = pointColor.getGreen();
+					final double foundBlue = pointColor.getBlue();
+					final double minRed = (color.getRed() - (color.getRed() * threshold));
+					final double maxRed = (color.getRed() + (color.getRed() * threshold));
+					final double minGreen = (color.getGreen() - (color.getGreen() * threshold));
+					final double maxGreen = (color.getGreen() + (color.getGreen() * threshold));
+					final double minBlue = (color.getBlue() - (color.getBlue() * threshold));
+					final double maxBlue = (color.getBlue() + (color.getBlue() * threshold));
 					if (isWithinRange(foundRed, minRed, maxRed)
 							&& isWithinRange(foundGreen, minGreen, maxGreen)
 							&& isWithinRange(foundBlue, minBlue, maxBlue))
@@ -215,7 +219,7 @@ public class ImageUtil {
 	 * @return A list of points where a color of the image is within the threshold.
 	 */
 	public static LinkedList<Point> getPointsWithColors(final BufferedImage image,
-			final Color[] colors, final double threshold) {
+			final Color[] colors, final int threshold) {
 		return getPointsWithColors(image, new Rectangle(image.getWidth(), image.getHeight()), colors, threshold);
 	}
 
@@ -228,7 +232,7 @@ public class ImageUtil {
 	 */
 	public static LinkedList<Point> getPointsWithColors(final BufferedImage image,
 			final Rectangle bounds, final Color[] colors) {
-		return getPointsWithColors(image, bounds, colors, 0.0);
+		return getPointsWithColors(image, bounds, colors, 0);
 	}
 
 	/**
@@ -238,7 +242,7 @@ public class ImageUtil {
 	 * @return A list of points where a color of the image is equal to one of given colors.
 	 */
 	public static LinkedList<Point> getPointsWithColors(final BufferedImage image, final Color[] colors) {
-		return getPointsWithColors(image, colors, 0.0);
+		return getPointsWithColors(image, colors, 0);
 	}
 
 	private static boolean isWithinRange(final double d, final double a, final double x) {
@@ -381,7 +385,7 @@ public class ImageUtil {
 	 * @return A list of points where matches were found.
 	 */
 	public static LinkedList<Point> findMatchLocations(final BufferedImage large,
-			final BufferedImage small, final double threshold) {
+			final BufferedImage small, final int threshold) {
 		return findMatchLocations(large, small, threshold, false);
 	}
 
@@ -392,11 +396,11 @@ public class ImageUtil {
 	 * @return A list of points where matches were found.
 	 */
 	public static LinkedList<Point> findMatchLocations(final BufferedImage large, final BufferedImage small) {
-		return findMatchLocations(large, small, 0.0);
+		return findMatchLocations(large, small, 0);
 	}
 
 	private static LinkedList<Point> findMatchLocations(final BufferedImage large,
-			final BufferedImage small, final double threshold, final boolean breakAfterFirst) {
+			final BufferedImage small, final int threshold, final boolean breakAfterFirst) {
 		final LinkedList<Point> locs = new LinkedList<Point>();
 		for (int y = 0; y < large.getHeight() - small.getHeight(); y++) {
 			for (int x = 0; x < large.getWidth() - small.getWidth(); x++) {
@@ -428,11 +432,11 @@ public class ImageUtil {
 	 * Gets whether a larger image contains a smaller image or not by a given threshold.
 	 * @param large The large, parent image.
 	 * @param small The small image to search for in the large image.
-	 * @param threshold The image distance threshold, ranging between 0.0 and 1.0.
+	 * @param threshold The image distance threshold, ranging between 0 and 255.
 	 * @return <tt>true</tt> if the large image contains the small image; otherwise <tt>false</tt>.
 	 */
 	public static boolean imageContains(final BufferedImage large,
-			final BufferedImage small, final double threshold) {
+			final BufferedImage small, final int threshold) {
 		return findMatchLocations(large, small, threshold, true).size() > 0;
 	}
 
@@ -443,7 +447,7 @@ public class ImageUtil {
 	 * @return <tt>true</tt> if the large image contains the small image; otherwise <tt>false</tt>.
 	 */
 	public static boolean imageContains(final BufferedImage large, final BufferedImage small) {
-		return imageContains(large, small, 0.0);
+		return imageContains(large, small, 0);
 	}
 
 	/**
@@ -454,11 +458,11 @@ public class ImageUtil {
 	 * @param width The width of the sub image.
 	 * @param height The height of the sub image.
 	 * @param small The small image to search for in the large image.
-	 * @param threshold The image distance threshold, ranging between 0.0 and 1.0.
+	 * @param threshold The image distance threshold, ranging between 0 and 255.
 	 * @return <tt>true</tt> if the sub image of the large image contains the small image; otherwise <tt>false</tt>.
 	 */
 	public static boolean subImageContains(final BufferedImage large, final int x, final int y,
-			final int width, final int height, final BufferedImage small, final double threshold) {
+			final int width, final int height, final BufferedImage small, final int threshold) {
 		return imageContains(large.getSubimage(x, y, width, height), small, threshold);
 	}
 
@@ -474,7 +478,7 @@ public class ImageUtil {
 	 */
 	public static boolean subImageContains(final BufferedImage large, final int x, final int y,
 			final int width, final int height, final BufferedImage small) {
-		return subImageContains(large, x, y, width, height, small, 0.0);
+		return subImageContains(large, x, y, width, height, small, 0);
 	}
 
 	/**
@@ -482,11 +486,11 @@ public class ImageUtil {
 	 * @param large The large, parent image.
 	 * @param sub The bounds of the sub image.
 	 * @param small The small image to search for in the large image.
-	 * @param threshold The image distance threshold, ranging between 0.0 and 1.0.
+	 * @param threshold The image distance threshold, ranging between 0 and 255.
 	 * @return <tt>true</tt> if the sub image of the large image contains the small image; otherwise <tt>false</tt>.
 	 */
 	public static boolean subImageContains(final BufferedImage large,
-			final Rectangle sub, final BufferedImage small, final double threshold) {
+			final Rectangle sub, final BufferedImage small, final int threshold) {
 		return subImageContains(large, sub.x, sub.y, sub.width, sub.height, small, threshold);
 	}
 
@@ -499,7 +503,7 @@ public class ImageUtil {
 	 */
 	public static boolean subImageContains(final BufferedImage large,
 			final Rectangle sub, final BufferedImage small) {
-		return subImageContains(large, sub, small, 0.0);
+		return subImageContains(large, sub, small, 0);
 	}
 
 }

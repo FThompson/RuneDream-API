@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import org.runedream.api.methods.Mouse;
+import org.runedream.api.util.Random;
 import org.runedream.api.wrappers.Tab;
 
 /**
@@ -11,9 +12,12 @@ import org.runedream.api.wrappers.Tab;
  * 
  * @author Viper
  */
-public class Magic {
+public final class Magic {
 	
 	public static final Rectangle BOUNDS = new Rectangle(545, 206, 192, 260);
+	
+	private Magic() {
+	}
 	
 	/**
 	 * SortButton convenience interface.
@@ -39,6 +43,12 @@ public class Magic {
 		 * @return The button's center point.
 		 */
 		public Point getCenter();
+		
+		/**
+		 * Gets a random interaction point.
+		 * @return A random interaction point.
+		 */
+		public Point getRandomPoint();
 
 		/**
 		 * Clicks the button.
@@ -87,6 +97,10 @@ public class Magic {
 			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
 		}
 		
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
+		}
+		
 		public void click() {
 			Mouse.click(getCenter());
 		}
@@ -125,6 +139,10 @@ public class Magic {
 		
 		public Point getCenter() {
 			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
+		}
+		
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
 		}
 		
 		public void click() {
@@ -169,6 +187,10 @@ public class Magic {
 		
 		public Point getCenter() {
 			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
+		}
+		
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
 		}
 		
 		public void click() {

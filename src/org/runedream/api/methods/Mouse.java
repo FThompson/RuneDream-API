@@ -2,6 +2,8 @@ package org.runedream.api.methods;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 
 import org.runedream.api.util.Random;
 import org.runedream.api.util.Time;
@@ -12,9 +14,12 @@ import org.runedream.input.MouseHandler;
  * 
  * @author Vulcan
  */
-public class Mouse {
+public final class Mouse {
 	
 	private static int speed = 10;
+	
+	private Mouse() {
+	}
 	
 	/**
 	 * Moves the mouse to a given location with given randomness.
@@ -234,6 +239,40 @@ public class Mouse {
 	 */
 	public static void click() {
 		click(true);
+	}
+	
+	/**
+	 * Clicks a gaussian-distribution generated random point within a rectangle.
+	 * @param rect The rectangle to click within.
+	 * @param left <tt>true</tt> for left-click; <tt>false</tt> for right-click.
+	 */
+	public static void click(final Rectangle rect, final boolean left) {
+		click(Random.getRandomPoint(rect), left);
+	}
+
+	/**
+	 * Clicks a gaussian-distribution generated random point within a rectangle.
+	 * @param rect The rectangle to click within.
+	 */
+	public static void click(final Rectangle rect) {
+		click(rect, true);
+	}
+
+	/**
+	 * Clicks a gaussian-distribution generated random point within a polygon.
+	 * @param poly The polygon to click within.
+	 * @param left <tt>true</tt> for left-click; <tt>false</tt> for right-click.
+	 */
+	public static void click(final Polygon poly, final boolean left) {
+		click(Random.getRandomPoint(poly), left);
+	}
+
+	/**
+	 * Clicks a gaussian-distribution generated random point within a polygon.
+	 * @param poly The polygon to click within.
+	 */
+	public static void click(final Polygon poly) {
+		click(poly, true);
 	}
 
 	/**

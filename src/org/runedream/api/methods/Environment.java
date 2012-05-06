@@ -6,9 +6,9 @@ import java.io.IOException;
 import javax.swing.JInternalFrame;
 import javax.swing.SwingUtilities;
 
-import org.runedream.Configuration;
 import org.runedream.RuneDream;
 import org.runedream.api.util.Log;
+import org.runedream.util.Configuration;
 import org.runedream.util.ScreenshotUtil;
 
 /**
@@ -16,10 +16,13 @@ import org.runedream.util.ScreenshotUtil;
  * 
  * @author Vulcan
  */
-public class Environment {
+public final class Environment {
 	
 	public static final int INPUT_MOUSE = 1;
 	public static final int INPUT_KEYBOARD = 2;
+	
+	private Environment() {
+	}
 	
 	/**
 	 * Gets the storage directory file.

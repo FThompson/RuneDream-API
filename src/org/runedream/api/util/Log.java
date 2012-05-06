@@ -12,9 +12,12 @@ import org.runedream.RuneDream;
  * 
  * @author Vulcan
  */
-public class Log {
+public final class Log {
 	
 	public static final Logger DEFAULT = Logger.getLogger(RuneDream.class.getName());
+	
+	private Log() {
+	}
 	
 	/**
 	 * Logs a message.

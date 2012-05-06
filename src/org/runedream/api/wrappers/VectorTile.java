@@ -1,0 +1,88 @@
+package org.runedream.api.wrappers;
+
+import java.awt.Point;
+
+import org.runedream.api.methods.Camera;
+import org.runedream.api.methods.Mouse;
+import org.runedream.api.methods.Walking;
+import org.runedream.api.util.Time;
+
+/**
+ * Wrapper representing a point relative to the minimap in an offset polar coordinate system.
+ * 
+ * @author Static, Vulcan
+ */
+public class VectorTile {
+
+	public static final int NORTH = 0;
+	public static final int NORTH_EAST = 45;
+	public static final int EAST = 90;
+	public static final int SOUTH_EAST = 135;
+	public static final int SOUTH = 180;
+	public static final int SOUTH_WEST = 225;
+	public static final int WEST = 270;
+	public static final int NORTH_WEST = 315;
+	public static final int MINIMAP_RADIUS = 72;
+	public static final Point MINIMAP_CENTER = new Point(627, 85);
+
+	private final int radius;
+	private final int degree;
+
+	/**
+	 * Instantiates a PolarTile with a radius and degree (r and theta) relative to the minimap center in an offset polar coordinate system.
+	 * @param radius The radius from the minimap center.
+	 * @param degree The degree (west = 0, counter-clockwise) of the direction to click.
+	 */
+	public VectorTile(final int radius, final int degree) {
+		if (radius < 0 || radius > MINIMAP_RADIUS) {
+			throw new IllegalArgumentException("Radius out of bounds: [0, 72]");
+		}
+		this.radius = radius;
+		this.degree = degree;
+	}
+
+	/**
+	 * Gets the polar tile's radius.
+	 * @return The polar tile's radius.
+	 */
+	public int getRadius() {
+		return radius;
+	}
+
+	/**
+	 * Gets the polar tile's angle degree.
+	 * @return The polar tile's angle degree.
+	 */
+	public int getDegree() {
+		return degree;
+	}
+
+	/**
+	 * Gets the current map point of the PolarTile, accounting for compass rotation.
+	 * @return The map point defined by radius and degrees in a rotating offset polar coordinate system.
+	 */
+	public Point getMapPoint() {
+		final double rads = Math.toRadians(degree - 90 + Camera.getCompassAngle());
+		final double x = radius * Math.cos(rads) + MINIMAP_CENTER.x;
+		final double y = radius * Math.sin(rads) + MINIMAP_CENTER.y;
+		return new Point((int) x, (int) y);
+	}
+
+	/**
+	 * Clicks on the map point.
+	 * @return <tt>true</tt> if clicked, walking began, and walking ended; otherwise <tt>false</tt>.
+	 */
+	public boolean clickOnMap() {
+		final Point p = getMapPoint();
+		Mouse.click(p);
+		return Time.waitFor(250, 300, new Time.Condition() {
+			public boolean isMet() {
+				return Walking.hasDestination();
+			}
+		}) && Time.waitFor(7000, 8000, new Time.Condition() {
+			public boolean isMet() {
+				return !Walking.hasDestination();
+			}
+		});
+	}
+}

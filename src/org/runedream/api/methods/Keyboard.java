@@ -7,7 +7,10 @@ import org.runedream.input.KeyboardHandler;
  * 
  * @author Vulcan
  */
-public class Keyboard {
+public final class Keyboard {
+	
+	private Keyboard() {
+	}
 	
 	/**
 	 * Presses (and holds) a given key.
@@ -57,6 +60,16 @@ public class Keyboard {
 	public static void sendKey(final char key, final int delay) {
 		KeyboardHandler.sendKey(key, delay);
 	}
+	
+	/**
+	 * Sends a given key with a delay.
+	 * @param key The character to type.
+	 * @param code The keycode.
+	 * @param delay The time to delay before typing.
+	 */
+	public static void sendKey(final char key, final int code, final int delay) {
+		KeyboardHandler.sendKey(key, delay);
+	}
 
 	/**
 	 * Sends a given key.
@@ -72,6 +85,16 @@ public class Keyboard {
 	 * @param delay The time to delay before typing.
 	 */
 	public static void sendKey(final int key, final int delay) {
+		KeyboardHandler.sendKey((char) key, delay);
+	}
+	
+	/**
+	 * Sends a given key with a delay.
+	 * @param key The character to type.
+	 * @param code The keycode.
+	 * @param delay The time to delay before typing.
+	 */
+	public static void sendKey(final int key, final int code, final int delay) {
 		KeyboardHandler.sendKey((char) key, delay);
 	}
 	

@@ -19,11 +19,14 @@ import org.runedream.api.util.Log;
 /**
  * Optical Character Recognition (OCR) methods.
  * 
- * @author battlegaurd
+ * @author battleguard
  */
-public class OCR {
+public final class OCR {
 
 	private static final Font[][] ALL_LETTERS = new Font[FontType.values().length][62];
+	
+	private OCR() {
+	}
 	
 	private static class Letter {
 
@@ -50,7 +53,7 @@ public class OCR {
 			goodPts = new Point[goodpoints.size()];
 			goodPts = goodpoints.toArray(goodPts);
 			badPts = new Point[badpoints.size()];
-			badPts = badpoints.toArray(goodPts);
+			badPts = badpoints.toArray(badPts);
 			this.letBox = letBox;
 			this.letter = letter;
 		}		
@@ -61,11 +64,14 @@ public class OCR {
 	 */
 	public static enum FontType {
 		BIG_CHARS("BigChars"),
-		NPC_CHARS("NPCChars"),
 		FRIEND_CHARS("FriendChars"),
 		LOGIN_CHARS("LoginChars"),
+		NPC_CHARS("NPCChars"),
 		SMALL_CHARS("SmallChars"),
+		SMALL_CHARS_NS("SmallCharsNS"),
 		STAT_CHARS("StatChars"),
+		TRADE_CHARS("TradeChars"),
+		XP_CHARS("XPChars"),
 		UP_CHARS("UpChars"),
 		UP_CHARS_EX("UpCharsEx");
 
@@ -229,8 +235,11 @@ public class OCR {
 				if ((i >= 58 && i < 65) || (i >= 91 && i < 97)) {
 					continue;
 				}
-				final BufferedImage img = ImageIO.read(new File(base, i + ".bmp"));
-				fontset[cnt++] = parseBMP(img, (char) i);
+				final File bitmap = new File(base, i + ".bmp");
+				if (bitmap.exists()) {
+					final BufferedImage img = ImageIO.read(bitmap);
+					fontset[cnt++] = parseBMP(img, (char) i);
+				}
 			} catch (final IOException e) {
 				Log.log("Failed to read bitmap " + i + " on font " + fontname);
 			}
@@ -572,15 +581,11 @@ public class OCR {
 			for (int x = leftUpperX; x < leftUpperX + width; x++) {
 				for (int y = leftUpperY; y < leftUpperY + height; y++) {
 					final int color = gameImage.getRGB(x, y) & 0xFFFFFF;
-					if (getDistanceSquare(color, 14474460) < 12500 // WHITE
+					ocrImage[x - leftUpperX][y - leftUpperY] =
+							getDistanceSquare(color, 14474460) < 12500 // WHITE
 							|| getDistanceSquare(color, 56540) < 12500 // CYAN
 							|| getDistanceSquare(color, 14474240) < 12500 // YELLOW
-							|| getDistanceSquare(color, 15106620) < 12500 // ORANGE
-					) {
-						ocrImage[x - leftUpperX][y - leftUpperY] = true;
-					} else {
-						ocrImage[x - leftUpperX][y - leftUpperY] = false;
-					}
+							|| getDistanceSquare(color, 15106620) < 12500; // ORANGE
 
 				}
 			}

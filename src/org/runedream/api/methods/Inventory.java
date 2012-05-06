@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Mouse;
+import org.runedream.api.util.Random;
+import org.runedream.api.wrappers.DTM;
+import org.runedream.api.wrappers.Menu;
 import org.runedream.api.wrappers.Tab;
 
 /**
@@ -15,13 +18,18 @@ import org.runedream.api.wrappers.Tab;
  * 
  * @author Static
  */
-public class Inventory {
+public final class Inventory {
 	
 	public static final Rectangle BOUNDS = new Rectangle(545, 206, 192, 260);
 	public static final Color SLOT_BACKGROUND = new Color(63, 53, 44);
 	
+	private Inventory() {
+	}
+	
 	/**
 	 * An enumeration of inventory item slots.
+	 * 
+	 * @author Static
 	 */
 	public enum Slot {
 		SLOT_0(new Rectangle(561, 212, 36, 32)),
@@ -74,6 +82,14 @@ public class Inventory {
 		public Point getCenter() {
 			return new Point(bounds.x + (int) (bounds.width / 2), bounds.y + (int) (bounds.height / 2));
 		}
+		
+		/**
+		 * Gets a random interaction point.
+		 * @return A random interaction point.
+		 */
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
+		}
 
 		/**
 		 * Gets the slot's center point color.
@@ -109,7 +125,7 @@ public class Inventory {
 		public boolean isEmpty() {
 			for (final Color slot_color : getColors()) {
 				final double distance = ColorUtil.getDistance(slot_color, SLOT_BACKGROUND);
-				if (distance > 0.0925) {
+				if (distance > 2) {
 					return false;
 				}
 			}
@@ -127,7 +143,7 @@ public class Inventory {
 			for (int x = bounds.x; x < bounds.x + bounds.width; x += 1) {
 				for (int y = bounds.y; y < bounds.y + bounds.height; y += 1) {
 					if (previous_color != null && previous_point != null) {
-						if (ColorUtil.getDistance(SLOT_BACKGROUND, previous_color) <= 0.0925) {
+						if (ColorUtil.getDistance(SLOT_BACKGROUND, previous_color) <= 2) {
 							if (Game.getColorAt(x, y).equals(Color.WHITE)) {
 								if (Calculations.getDistanceBetween(previous_point, new Point(x, y)) <= 1) {
 									return true;
@@ -143,10 +159,36 @@ public class Inventory {
 		}
 		
 		/**
+		 * Checks if the slot contains one of a given set of DTMs.
+		 * @param dtms The DTMs to check for.
+		 * @return <tt>true</tt> if one of the DTMs was found within the slot; otherwise <tt>false</tt>.
+		 */
+		public boolean containsOneOf(final DTM... dtms) {
+			for (final DTM dtm : dtms) {
+				if (dtm != null) {
+					final Point[] points = dtm.getAll(getBounds());
+					if (points != null && points.length > 0) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Checks if the slot contains a given DTM.
+		 * @param dtms The DTM to check for.
+		 * @return <tt>true</tt> if the DTM was found within the slot; otherwise <tt>false</tt>.
+		 */
+		public boolean contains(DTM dtm) {
+			return containsOneOf(dtm);
+		}
+		
+		/**
 		 * Clicks the slot.
 		 */
 		public void click() {
-			Mouse.click(getCenter());
+			Mouse.click(getRandomPoint());
 		}
 		
 		/**
@@ -154,9 +196,12 @@ public class Inventory {
 		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
 		 */
 		public void click(final boolean left) {
-			Mouse.click(getCenter(), left);
+			Mouse.click(getRandomPoint());
 		}
-
+		
+		public boolean interact(final String action) {
+			return Menu.interact(action, getRandomPoint());
+		}
 	}
 
 	/**
@@ -192,16 +237,16 @@ public class Inventory {
 	/**
 	 * Gets the count of items with the given color in the inventory.
 	 * @param color The color to check for.
-	 * @param threshold The threshold to check the color within.
+	 * @param tolerance The tolerance to check the color within.
 	 * @return The count of items with the given color in the inventory.
 	 */
-	public static int getCount(final Color color, final double threshold) {
+	public static int getCount(final Color color, final int tolerance) {
 		open();
 		int count = 0;
 		for (final Slot slot : Slot.values()) {
 			for (final Color slot_color : slot.getColors()) {
-				if (ColorUtil.getDistance(slot_color, color) <= threshold) {
-					count += 1;
+				if (ColorUtil.getDistance(slot_color, color) <= tolerance) {
+					count++;
 					break;
 				}
 			}
@@ -215,7 +260,7 @@ public class Inventory {
 	 * @return The count of items with the given color in the inventory.
 	 */
 	public static int getCount(final Color color) {
-		return getCount(color, 0.0);
+		return getCount(color, 0);
 	}
 	
 	/**
@@ -240,6 +285,7 @@ public class Inventory {
 	 * @return The Slot at the given index.
 	 */
 	public static Slot getSlotAt(final int index) {
+		open();
 		for (final Slot slot : Slot.values()) {
 			if (slot.ordinal() == index) {
 				return slot;
@@ -251,13 +297,14 @@ public class Inventory {
 	/**
 	 * Gets the first slot with a given color.
 	 * @param color The color to check for.
-	 * @param threshold The threshold to check the color within.
+	 * @param tolerance The tolerance to check the color within.
 	 * @return The first slow with the given color.
 	 */
-	public static Slot getSlotWithColor(final Color color, final double threshold) {
+	public static Slot getSlotWithColor(final Color color, final int tolerance) {
+		open();
 		for (final Slot slot : Slot.values()) {
 			for (final Color slot_color : slot.getColors()) {
-				if (ColorUtil.getDistance(slot_color, color) <= threshold) {
+				if (ColorUtil.getDistance(slot_color, color) <= tolerance) {
 					return slot;
 				}
 			}
@@ -271,7 +318,7 @@ public class Inventory {
 	 * @return The first slow with the given color.
 	 */
 	public static Slot getSlotWithColor(final Color color) {
-		return getSlotWithColor(color, 0.0);
+		return getSlotWithColor(color, 0);
 	}
 	
 	/**
@@ -279,6 +326,7 @@ public class Inventory {
 	 * @return <tt>true</tt> if an item is selected; otherwise <tt>false</tt>.
 	 */
 	public static boolean isItemSelected() {
+		open();
 		for (final Slot slot : Inventory.Slot.values()) {
 			if (slot.isSelected()) {
 				return true;
@@ -286,5 +334,33 @@ public class Inventory {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Gets the slots with one of a set of given DTMs valid within them.
+	 * @params dtm The DTMs to search for.
+	 * @return The slots found; or an empty array if none.
+	 */
+	public static Slot[] getSlots(final DTM... dtms) {
+		open();
+		final LinkedList<Slot> slots = new LinkedList<Slot>();
+		for (Slot slot : Slot.values()) {
+			if (slot.containsOneOf(dtms)) {
+				slots.add(slot);
+			}
+		}
+		return slots.toArray(new Slot[slots.size()]);
+	}
+	
+	/**
+	 * Gets the first slot with one of a set of given DTMs valid within it
+	 * @param dtms The DTMs to search for.
+	 * @return The slot found; or null if none.
+	 */
+	public static Slot getSlot(final DTM... dtms) {
+		final Slot[] slots = getSlots(dtms);
+		if (slots.length > 0) {
+			return slots[0];
+		}
+		return null;
+	}
 }

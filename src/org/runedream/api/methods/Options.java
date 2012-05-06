@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.runedream.api.util.Random;
 import org.runedream.api.wrappers.Tab;
 
 /**
@@ -14,7 +15,10 @@ import org.runedream.api.wrappers.Tab;
  * 
  * @author Amplex
  */
-public class Options {
+public final class Options {
+	
+	private Options() {
+	}
 
 	/**
 	 * Checks if the inventory tab is open.
@@ -99,6 +103,14 @@ public class Options {
 		public Point getCenter() {
 			return new Point((int) (bounds.x + (bounds.width / 2)), (int) (bounds.y + (bounds.height / 2)));
 		}
+		
+		/**
+		 * Gets a random interaction point.
+		 * @return A random interaction point.
+		 */
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
+		}
 
 		/**
 		 * Gets the chat mode's color array.
@@ -129,7 +141,7 @@ public class Options {
 		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
 		 */
 		public void click(final boolean left) {
-			Mouse.click(getCenter(), 6, 6, left);
+			Mouse.click(getRandomPoint(), left);
 		}
 		
 		/**
@@ -195,6 +207,14 @@ public class Options {
 		}
 		
 		/**
+		 * Gets a random interaction point.
+		 * @return A random interaction point.
+		 */
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
+		}
+		
+		/**
 		 * Clicks the button.
 		 */
 		public void click() {
@@ -206,7 +226,7 @@ public class Options {
 		 * @param left <tt>true</tt> for left click; <tt>false</tt> for right click.
 		 */
 		public void click(final boolean left) {
-			Mouse.click(getCenter(), 6, 6, left);
+			Mouse.click(getRandomPoint(), left);
 		}
 	}
 

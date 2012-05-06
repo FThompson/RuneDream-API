@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Mouse;
+import org.runedream.api.util.Random;
 import org.runedream.api.wrappers.Tab;
 
 /**
@@ -16,12 +17,15 @@ import org.runedream.api.wrappers.Tab;
  * 
  * @author Amplex
  */
-public class Prayer {
+public final class Prayer {
 	
 	public static final Color ACTIVATED = new Color(171, 154, 108);
 	public static final Color QUICKPRAYER_ACTIVATED = new Color(155, 186, 150);
 	public static final Rectangle QUICKPRAYER_BOUNDS = new Rectangle(705, 53, 34, 33);
 	public static final Rectangle QUICKPRAYER_TEXT_BOUNDS = new Rectangle(740, 62, 22, 23);
+	
+	private Prayer() {
+	}
 
 	/**
 	 * Checks if the inventory tab is open.
@@ -44,6 +48,14 @@ public class Prayer {
 	 */
 	public static Point getQuickPrayerButtonCenter() {
 		return new Point((int) (QUICKPRAYER_BOUNDS.x + (QUICKPRAYER_BOUNDS.width / 2)), (int) (QUICKPRAYER_BOUNDS.y + (QUICKPRAYER_BOUNDS.height / 2)));
+	}
+	
+	/**
+	 * Gets a random interaction point.
+	 * @return A random interaction point.
+	 */
+	public static Point getQuickPrayerButtonRandomPoint() {
+		return Random.getRandomPoint(QUICKPRAYER_BOUNDS);
 	}
 	
 	/**
@@ -79,7 +91,7 @@ public class Prayer {
 	 */
 	public static boolean setQuickPrayerEnabled(final boolean activated) {
 		if (isQuickPrayerActivated() != activated) {
-			Mouse.click(getQuickPrayerButtonCenter());
+			Mouse.click(getQuickPrayerButtonRandomPoint());
 		}
 		return isQuickPrayerActivated();
 	}
@@ -143,6 +155,10 @@ public class Prayer {
 
 		public Point getCenter() {
 			return new Point((int) (bounds.x + (bounds.width / 2)), (int) (bounds.y + (bounds.height / 2)));
+		}
+		
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
 		}
 		
 		public Color[] getColors() {
@@ -227,6 +243,10 @@ public class Prayer {
 			return new Point((int) (bounds.x + (bounds.width / 2)), (int) (bounds.y + (bounds.height / 2)));
 		}
 		
+		public Point getRandomPoint() {
+			return Random.getRandomPoint(bounds);
+		}
+		
 		public Color[] getColors() {
 			open();
 			final List<Color> colors = new LinkedList<Color>();
@@ -284,6 +304,12 @@ public class Prayer {
 		 * @return The prayer's center point.
 		 */
 		public Point getCenter();
+		
+		/**
+		 * Gets a random interaction point.
+		 * @return A random interaction point.
+		 */
+		public Point getRandomPoint();
 
 		/**
 		 * Gets the prayer's color array.

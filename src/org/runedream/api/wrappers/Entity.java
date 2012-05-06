@@ -88,7 +88,7 @@ public class Entity {
 				Mouse.click(false);
 				Time.sleep(70, 100);
 				final Menu menu = Menu.find();
-				return menu != null && menu.interact(action);
+				return menu != null && menu.click(action);
 			}
 		}
 		return false;
@@ -116,13 +116,13 @@ public class Entity {
 		} else {
 			for (final DTM dtm : dtms) {
 				if (boundedSearch) {
-					for (final Point point : dtm.getPoints()) {
+					for (final Point point : dtm.getAll(Game.VIEWPORT)) {
 						if (bounds.contains(point)) {
 							return point;
 						}
 					}
 				} else {
-					for (final Point point : dtm.getPoints()) {
+					for (final Point point : dtm.getAll(Game.VIEWPORT)) {
 						if (Game.VIEWPORT.contains(point)) {
 							return point;
 						}

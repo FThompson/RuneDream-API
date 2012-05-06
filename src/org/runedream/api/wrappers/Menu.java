@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import org.runedream.api.methods.Game;
 import org.runedream.api.methods.Mouse;
 import org.runedream.api.methods.OCR;
+import org.runedream.api.util.Time;
 
 /**
  * Wrapper representing a menu and its properties.
  * 
  * @author eXoTiK, Vulcan
  */
-public class Menu {
+public final class Menu {
 
 	private boolean offScreen = false;
 	private Rectangle menu = null;
@@ -210,9 +211,34 @@ public class Menu {
 	/**
 	 * Clicks the first MenuAction containing a given action.
 	 * @param action The action to interact.
-	 * @return <tt>true</tt> if action was found and clicked; otherwise <tt>false</tt>.
+	 * @return <tt>true</tt> if action was successfully interacted with; otherwise <tt>false</tt>.
 	 */
-	public boolean interact(final String action) {
+	public boolean click(final String action) {
 		return click(getIndex(action));
+	}
+	
+	/**
+	 * Interacts a given action at a given point.
+	 * @param action The action to interact.
+	 * @param point The point to interact at.
+	 * @return <tt>true</tt> if action was successfully interacted with; otherwise <tt>false</tt>.
+	 */
+	public static boolean interact(final String action, final Point point) {
+		Mouse.click(point, false);
+		Time.sleep(30, 50);
+		final Menu menu = Menu.find();
+		if (menu != null) {
+			return menu.click(action);
+		}
+		return false;
+	}
+	
+	/**
+	 * Interacts a given action.
+	 * @param action The action to interact.
+	 * @return <tt>true</tt> if action was successfully interacted with; otherwise <tt>false</tt>.
+	 */
+	public static boolean interact(final String action) {
+		return interact(action, Mouse.getLocation());
 	}
 }

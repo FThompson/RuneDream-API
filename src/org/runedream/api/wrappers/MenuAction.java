@@ -8,7 +8,7 @@ import java.awt.Rectangle;
  * @author Vulcan
  * @see Menu
  */
-public class MenuAction {
+public final class MenuAction {
 	
 	private String action = null;
 	private Rectangle bounds = null;

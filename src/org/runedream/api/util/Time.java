@@ -7,6 +7,9 @@ package org.runedream.api.util;
  */
 public final class Time {
 	
+	private Time() {
+	}
+	
 	/**
 	 * Sleeps for a given amount of milliseconds.
 	 * @param millis The milliseconds to sleep.
@@ -28,11 +31,39 @@ public final class Time {
 	}
 	
 	/**
+	 * Waits for a given condition to be met, timing out after a given time.
+	 * @param timeout The time (in milliseconds) to timeout after.
+	 * @param condition The condition to be met.
+	 * @return <tt>true</tt> if the condition was met; otherwise <tt>false</tt>.
+	 */
+	public static boolean waitFor(final int timeout, final Condition condition) {
+		final long startTime = System.currentTimeMillis();
+		while (startTime + timeout > System.currentTimeMillis()) {
+			if (condition.isMet()) {
+				return true;
+			}
+			Time.sleep(20, 30);
+		}
+		return condition.isMet();
+	}
+	
+	/**
+	 * Waits for a given condition to be met, timing out after a given time.
+	 * @param min The minimum time (in milliseconds) to timeout after.
+	 * @param max The maximum time (in milliseconds) to timeout after.
+	 * @param condition The condition to be met.
+	 * @return <tt>true</tt> if the condition was met; otherwise <tt>false</tt>.
+	 */
+	public static boolean waitFor(final int min, final int max, final Condition condition) {
+		return waitFor(Random.random(min, max), condition);
+	}
+	
+	/**
 	 * Converts a long to a time display in format 00:00:00.
 	 * @param millis The time in milliseconds to convert.
 	 * @return The display string of the time.
 	 */
-	public static String getTimeString(long millis) {
+	public static String toElapsedString(long millis) {
 		long time = millis / 1000;
 		String seconds = Integer.toString((int) (time % 60));
 		String minutes = Integer.toString((int) ((time % 3600) / 60));
@@ -49,6 +80,18 @@ public final class Time {
 			}
 		}
 		return hours + ":" + minutes + ":" + seconds;
+	}
+	
+	/**
+	 * A condition interface.
+	 */
+	public static interface Condition {
+		
+		/**
+		 * Checks if the condition has been met.
+		 * @return <tt>true</tt> if met; otherwise <tt>false</tt>.
+		 */
+		public boolean isMet();
 	}
 
 }
