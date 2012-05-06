@@ -1,7 +1,7 @@
 package org.runedream.api.wrappers;
 
 /**
- * A set of PolarTiles to be traversed.
+ * A set of VectorTiles to be traversed.
  * 
  * @author Static
  * @see VectorTile
@@ -11,7 +11,7 @@ public class VectorPath {
     private final VectorTile[] tiles;
 
     /**
-     * Constructs a path of PolarTiles.
+     * Constructs a path of VectorTiles.
      * @param tiles The tiles to construct the path from.
      * @see VectorTile
      */
@@ -20,23 +20,23 @@ public class VectorPath {
     }
 
     /**
-     * Gets the first PolarTile in the path.
-     * @return The first PolarTile in the path.
+     * Gets the first VectorTile in the path.
+     * @return The first VectorTile in the path.
      */
     public VectorTile getStart() {
         return tiles[0];
     }
 
     /**
-     * Gets the last PolarTile in the path.
-     * @return The last PolarTile in the path.
+     * Gets the last VectorTile in the path.
+     * @return The last VectorTile in the path.
      */
     public VectorTile getEnd() {
         return tiles[tiles.length - 1];
     }
     
     /**
-     * Reverses the PolarPath.
+     * Reverses the VectorPath.
      */
     public void reverse() {
         final VectorTile[] reversed = new VectorTile[tiles.length];
@@ -49,7 +49,7 @@ public class VectorPath {
     }
     
     /**
-     * Traverses the path, clicking each PolarTile until every one has been clicked, or one fails.
+     * Traverses the path, clicking each VectorTile until every one has been clicked, or one fails.
      * @return <tt>true</tt> if traversed; otherwise <tt>false</tt>.
      */
     public boolean traverse() {

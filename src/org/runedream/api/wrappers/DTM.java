@@ -88,6 +88,25 @@ public class DTM {
 	public Point getPoint() {
 		return getPoint(Game.SCREEN);
 	}
+	
+	/**
+	 * Gets the nearest valid location point to the given point.
+	 * @param point The point to get the nearest to.
+	 * @param bounds The bounds to search within.
+	 * @return A point where the DTM is valid.
+	 */
+	public Point getNearest(final Point point, final Rectangle bounds) {
+		return Calculations.getNearestPoint(Mouse.getLocation(), getAll(bounds));
+	}
+	
+	/**
+	 * Gets the nearest valid location point to the given point.
+	 * @param point The point to get the nearest to.
+	 * @return A point where the DTM is valid.
+	 */
+	public Point getNearest(final Point point) {
+		return getNearest(point, Game.SCREEN);
+	}
 
 	/**
 	 * Gets the nearest valid location point to the mouse.
@@ -95,7 +114,7 @@ public class DTM {
 	 * @return A point where the DTM is valid.
 	 */
 	public Point getNearest(final Rectangle bounds) {
-		return Calculations.getNearestPoint(Mouse.getLocation(), getAll(bounds));
+		return getNearest(Mouse.getLocation(), bounds);
 	}
 
 	/**

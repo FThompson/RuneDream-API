@@ -8,7 +8,7 @@ import org.runedream.api.methods.Walking;
 import org.runedream.api.util.Time;
 
 /**
- * Wrapper representing a point relative to the minimap in an offset polar coordinate system.
+ * Wrapper representing a point relative to the minimap in a modified polar coordinate system.
  * 
  * @author Static, Vulcan
  */
@@ -29,7 +29,7 @@ public class VectorTile {
 	private final int degree;
 
 	/**
-	 * Instantiates a PolarTile with a radius and degree (r and theta) relative to the minimap center in an offset polar coordinate system.
+	 * Instantiates a VectorTile with a radius and degree (r and theta) relative to the minimap center in an offset polar coordinate system.
 	 * @param radius The radius from the minimap center.
 	 * @param degree The degree (west = 0, counter-clockwise) of the direction to click.
 	 */
@@ -42,24 +42,24 @@ public class VectorTile {
 	}
 
 	/**
-	 * Gets the polar tile's radius.
-	 * @return The polar tile's radius.
+	 * Gets the vector tile's radius.
+	 * @return The vector tile's radius.
 	 */
 	public int getRadius() {
 		return radius;
 	}
 
 	/**
-	 * Gets the polar tile's angle degree.
-	 * @return The polar tile's angle degree.
+	 * Gets the vector tile's angle degree.
+	 * @return The vector tile's angle degree.
 	 */
 	public int getDegree() {
 		return degree;
 	}
 
 	/**
-	 * Gets the current map point of the PolarTile, accounting for compass rotation.
-	 * @return The map point defined by radius and degrees in a rotating offset polar coordinate system.
+	 * Gets the current map point of the VectorTile, accounting for compass rotation.
+	 * @return The map point defined by radius and degrees in a rotating modified polar coordinate system.
 	 */
 	public Point getMapPoint() {
 		final double rads = Math.toRadians(degree - 90 + Camera.getCompassAngle());
@@ -75,7 +75,7 @@ public class VectorTile {
 	public boolean clickOnMap() {
 		final Point p = getMapPoint();
 		Mouse.click(p);
-		return Time.waitFor(250, 300, new Time.Condition() {
+		return Time.waitFor(650, 800, new Time.Condition() {
 			public boolean isMet() {
 				return Walking.hasDestination();
 			}

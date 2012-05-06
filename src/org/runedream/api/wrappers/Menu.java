@@ -198,13 +198,24 @@ public final class Menu {
 	 * @return <tt>true</tt> if a valid index was given and clicked; otherwise <tt>false</tt>.
 	 */
 	public boolean click(final int index) {
+		return click(false, index);
+	}
+	
+	/**
+	 * Clicks a given index of the menu.
+	 * @param mousekeys <tt>true</tt> to click using virtual mouse keys (hops the mouse).
+	 * @param index The index to click.
+	 * @return <tt>true</tt> if a valid index was given and clicked; otherwise <tt>false</tt>.
+	 */
+	public boolean click(final boolean mousekeys, final int index) {
 		if (index < 0 || index >= actions.size()) {
 			return false;
 		}
 		final Rectangle action = actions.get(index).getBounds();
 		final int halfWidth = action.width / 2;
 		final int halfHeight = action.height / 2;
-		Mouse.click(action.x + halfWidth, action.y + halfHeight, halfWidth, halfHeight);
+		Mouse.hop(action.x + halfWidth, action.y + halfHeight, halfWidth, halfHeight);
+		Mouse.click();
 		return true;
 	}
 	
