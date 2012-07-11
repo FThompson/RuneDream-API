@@ -63,8 +63,8 @@ public class VectorTile {
 	 */
 	public Point getMapPoint() {
 		final double rads = Math.toRadians(degree - 90 + Camera.getCompassAngle());
-		final double x = radius * Math.cos(rads) + MINIMAP_CENTER.x;
-		final double y = radius * Math.sin(rads) + MINIMAP_CENTER.y;
+		final double x = MINIMAP_CENTER.x - radius * Math.cos(rads);
+		final double y = MINIMAP_CENTER.y + radius * Math.sin(rads);
 		return new Point((int) x, (int) y);
 	}
 
