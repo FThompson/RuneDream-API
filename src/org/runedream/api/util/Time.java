@@ -63,8 +63,8 @@ public final class Time {
 	 * @param millis The time in milliseconds to convert.
 	 * @return The display string of the time.
 	 */
-	public static String toElapsedString(long millis) {
-		long time = millis / 1000;
+	public static String toElapsedString(final long millis) {
+		final long time = millis / 1000;
 		String seconds = Integer.toString((int) (time % 60));
 		String minutes = Integer.toString((int) ((time % 3600) / 60));
 		String hours = Integer.toString((int) (time / 3600));
