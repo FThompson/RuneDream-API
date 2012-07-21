@@ -351,4 +351,32 @@ public class DTM {
 		}
 		return new DTM(root, branches.toArray(new DTMBranch[branches.size()]));
 	}
+	
+	/**
+	 * Returns true if a DTM is valid out of an array of DTMs,
+	 * @return True if a DTM in the array is valid.
+	 * @param dtms An array of DTMs
+	 */
+	public boolean areDtmsValid(DTM... dtms) {
+		for (DTM d : dtms) {
+			if (d.isValid()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns A DTM out of an array of DTMs that is valid (Used to check for multiple valid DTMs),
+	 * @return A DTM that is valid out of the DTM array
+	 * @param dtms An array of DTMs
+	 */
+	public DTM getValidDtms(DTM... dtms) {
+		for (DTM d : dtms) {
+			if (d.isValid()) {
+				return d;
+			}
+		}
+		return null;
+	}
 }
